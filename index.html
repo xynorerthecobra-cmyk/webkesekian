@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XI-3 SAINTEK 1 DIGITAL — MAN 2 Deli Serdang</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap">
+<style>
+:root {
+  --bg: #0a0a0a; --bg-elev: #111111;
+  --text: #ffffff; --text-soft: #dadada; --text-mute: #8a8a8a;
+  --accent: rgba(200,170,130,1);
+  --accent-soft: rgba(200,170,130,0.25);
+  --accent-faint: rgba(200,170,130,0.08);
+  --line: rgba(255,255,255,0.10);
+  --line-soft: rgba(255,255,255,0.06);
+  --surface: rgba(255,255,255,0.02);
+  --surface-hover: rgba(255,255,255,0.04);
+  --ease: cubic-bezier(.22,1,.36,1);
+  --warn: #ff8a6a; --info: #6aa6ff; --purple: #b878ff;
+}
+[data-theme="light"] {
+  --bg: #d6d4cf; --bg-elev: #dddad3;
+  --text: #1f1f1f; --text-soft: #3d3d3d; --text-mute: #6e6e6e;
+  --accent: rgba(110, 80, 25, 1); --accent-soft: rgba(110, 80, 25, 0.2); --accent-faint: rgba(110, 80, 25, 0.05);
+  --line: rgba(0,0,0,0.12); --line-soft: rgba(0,0,0,0.06);
+  --surface: rgba(0,0,0,0.03); --surface-hover: rgba(0,0,0,0.06);
+  --warn: #a33e1a; --info: #1b4d85; --purple: #692a96;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-weight: 400; line-height: 1.6; overflow-x: hidden; transition: background 600ms var(--ease), color 600ms var(--ease); min-height: 100vh; }
+body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(var(--line-soft) 1px, transparent 1px), linear-gradient(90deg, var(--line-soft) 1px, transparent 1px); background-size: 80px 80px; pointer-events: none; z-index: 0; mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); }
+.noise-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 9999; opacity: 0.035; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/></svg>"); animation: noise 20s linear infinite; }
+@keyframes noise { 0%,100% { transform: translate(0,0); } 20% { transform: translate(-10%,5%); } 50% { transform: translate(-10%,5%); } 80% { transform: translate(-15%,0); } }
+
+.login-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 3000; display: flex; align-items: center; justify-content: center; padding: 2rem; opacity: 1; visibility: visible; transition: opacity 400ms var(--ease), visibility 400ms var(--ease); }
+.login-overlay.hide { opacity: 0; visibility: hidden; pointer-events: none; }
+.login-box { width: 100%; max-width: 400px; border: 1px solid var(--line); padding: 3rem 2rem; background: var(--bg); position: relative; }
+.login-box::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--accent); }
+.login-title { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--text); }
+.login-sub { font-family: 'JetBrains Mono'; font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-mute); margin-bottom: 2rem; }
+.login-tab { display: flex; gap: 1rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--line); }
+.login-tab-btn { padding: 0.8rem 0; font-family: 'JetBrains Mono'; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-mute); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 300ms ease; }
+.login-tab-btn.active { color: var(--accent); border-color: var(--accent); }
+.login-error { color: var(--warn); font-family: 'JetBrains Mono'; font-size: 0.75rem; margin-bottom: 1rem; min-height: 1.2rem; text-transform: uppercase; }
+
+.site-header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); transition: background 600ms var(--ease), border-color 600ms var(--ease); }
+.header-inner { max-width: 1400px; margin: 0 auto; padding: 1rem 2rem; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 1.5rem; }
+.logo { display: flex; align-items: baseline; gap: 0.6rem; text-decoration: none; color: var(--text); font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; }
+.logo-mark { color: var(--accent); font-weight: 700; } .logo-text { color: var(--text-soft); font-weight: 400; }
+.nav { display: flex; gap: 0.1rem; justify-content: center; flex-wrap: wrap; }
+.nav-link { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-mute); text-decoration: none; padding: 0.5rem 0.85rem; position: relative; cursor: pointer; transition: color 300ms var(--ease); }
+.nav-link::after { content: ''; position: absolute; left: 0.85rem; right: 0.85rem; bottom: 0.3rem; height: 1px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 400ms var(--ease); }
+.nav-link:hover { color: var(--text); } .nav-link:hover::after { transform: scaleX(1); }
+.nav-link.active { color: var(--accent); } .nav-link.active::after { transform: scaleX(1); }
+.header-right { display: flex; gap: 0.5rem; align-items: center; }
+.theme-toggle, .logout-btn { width: 38px; height: 38px; border: 1px solid var(--line); background: transparent; color: var(--text); cursor: pointer; font-size: 1.05rem; display: grid; place-items: center; transition: border-color 300ms var(--ease), color 300ms var(--ease); font-family: 'JetBrains Mono', monospace; }
+.logout-btn { width: auto; padding: 0 1rem; font-size: 0.7rem; letter-spacing: 0.1em; }
+.theme-toggle:hover, .logout-btn:hover { border-color: var(--warn); color: var(--warn); }
+.theme-toggle .theme-icon-light { display: none; } [data-theme="light"] .theme-toggle .theme-icon-dark { display: none; } [data-theme="light"] .theme-toggle .theme-icon-light { display: block; }
+@media (max-width: 1000px) { .header-inner { grid-template-columns: 1fr auto; grid-template-rows: auto auto; gap: 0.5rem 1rem; } .logo { grid-row: 1; grid-column: 1; } .header-right { grid-row: 1; grid-column: 2; } .nav { grid-row: 2; grid-column: 1 / -1; justify-content: flex-start; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 0.5rem; margin: 0 -2rem -1rem; padding-left: 1.5rem; padding-right: 1.5rem; } .nav-link { white-space: nowrap; padding: 0.5rem 0.7rem; } .nav::-webkit-scrollbar { height: 0; } }
+
+main { padding-top: 5rem; position: relative; z-index: 1; min-height: calc(100vh - 5rem); }
+.page { display: none; animation: pageIn 600ms var(--ease); }
+.page.active { display: block; } @keyframes pageIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+
+.label-mono { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); font-weight: 500; display: inline-flex; align-items: center; gap: 0.6rem; } .label-mono::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
+.h2 { font-family: 'Inter', sans-serif; font-weight: 800; font-size: clamp(2rem, 4.5vw, 3.6rem); letter-spacing: -0.025em; line-height: 1; color: var(--text); }
+.section-pad { padding: 6rem 2rem; } .container { max-width: 1400px; margin: 0 auto; }
+
+.hero { min-height: calc(100vh - 5rem); display: flex; flex-direction: column; justify-content: center; padding: 6rem 2rem 4rem; position: relative; }
+.hero-meta { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 2.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-mute); }
+.hero-meta span { display: inline-flex; align-items: center; gap: 0.5rem; } .hero-meta span::before { content: ''; width: 6px; height: 6px; background: var(--accent); display: inline-block; }
+.hero-title { margin-bottom: 2rem; } .hero-title .pre { display: block; font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; letter-spacing: 0.3em; color: var(--text-mute); text-transform: uppercase; margin-bottom: 1.2rem; font-weight: 400; }
+.hero-title h1 { font-family: 'Inter', sans-serif; font-weight: 900; font-size: clamp(3rem, 9vw, 8rem); letter-spacing: -0.04em; line-height: 0.9; color: var(--text); }
+.hero-title h1 .accent { color: var(--accent); font-style: italic; font-weight: 800; }
+.hero-subtitle { font-family: 'JetBrains Mono', monospace; font-size: 1rem; line-height: 1.7; color: var(--text-soft); max-width: 620px; margin-bottom: 3rem; min-height: 5rem; white-space: pre-wrap; }
+.caret { display: inline-block; width: 9px; height: 1.1em; background: var(--accent); vertical-align: text-bottom; margin-left: 2px; animation: blink 1s infinite step-end; } .caret.is-hidden { opacity: 0; animation: none; } @keyframes blink { 50% { background: transparent; } }
+.hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; opacity: 0; transform: translateY(20px); transition: opacity 800ms var(--ease), transform 800ms var(--ease); } .hero-cta.is-shown { opacity: 1; transform: none; }
+.btn { display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.95rem 1.6rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; border: 1px solid var(--line); background: transparent; color: var(--text); cursor: pointer; transition: all 400ms var(--ease); }
+.btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-faint); }
+.btn--primary { border-color: var(--accent); color: var(--accent); } .btn--primary:hover { background: var(--accent); color: var(--bg); }
+.btn .arrow { transition: transform 400ms var(--ease); } .btn:hover .arrow { transform: translateX(4px); }
+
+.clock-wrap { margin-top: 4rem; padding: 3rem 2rem; border: 1px solid var(--line); background: var(--bg); text-align: center; position: relative; overflow: hidden; } .clock-wrap::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--accent); }
+.clock-label { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-mute); margin-bottom: 1rem; } .clock-time { font-family: 'JetBrains Mono', monospace; font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 700; letter-spacing: -0.02em; color: var(--accent); line-height: 1; margin-bottom: 0.8rem; } .clock-date { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; letter-spacing: 0.1em; color: var(--text-soft); }
+
+.widget-tugas { margin-top: 4rem; padding: 2rem; border: 1px solid var(--line); background: var(--bg); } .widget-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--line-soft); } .widget-title { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; letter-spacing: 0.15em; color: var(--accent); font-weight: 700; text-transform: uppercase; } .widget-list { list-style: none; } .widget-list li { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 0; border-bottom: 1px solid var(--line-soft); font-size: 0.9rem; color: var(--text-soft); gap: 1rem; } .widget-list li:last-child { border-bottom: none; } .widget-list .deadline { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; padding: 0.2rem 0.5rem; border: 1px solid var(--warn); color: var(--warn); white-space: nowrap; } .widget-footer { margin-top: 1.5rem; text-align: right; }
+
+.slogan-wrap { margin-top: 5rem; padding-top: 4rem; border-top: 1px solid var(--line); text-align: center; } .slogan { font-family: 'Inter', sans-serif; font-size: clamp(1.8rem, 4.5vw, 3.2rem); font-style: italic; font-weight: 300; letter-spacing: -0.02em; color: var(--accent); line-height: 1.2; margin-bottom: 1.2rem; } .slogan-arti { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; letter-spacing: 0.1em; color: var(--text-mute); }
+
+.sticky-pair { display: grid; grid-template-columns: 1fr 1.4fr; gap: 5rem; align-items: start; } .sticky-pair .left { position: sticky; top: 6rem; } .sticky-pair .right p { font-size: 1.05rem; line-height: 1.75; color: var(--text-soft); margin-bottom: 1.6rem; } .sticky-pair .right p strong { color: var(--text); font-weight: 600; } @media (max-width: 900px) { .sticky-pair { grid-template-columns: 1fr; gap: 2rem; } .sticky-pair .left { position: static; } }
+
+.visi-misi { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); } .vm-card { background: var(--bg); padding: 3rem 2.5rem; } .vm-card h3 { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; } .vm-card .visi-text { font-size: 1.4rem; line-height: 1.5; font-weight: 500; color: var(--text); letter-spacing: -0.01em; } .vm-card ol { list-style: none; counter-reset: misi; } .vm-card ol li { counter-increment: misi; padding: 1rem 0 1rem 3rem; border-bottom: 1px solid var(--line-soft); position: relative; color: var(--text-soft); line-height: 1.6; } .vm-card ol li:last-child { border-bottom: none; } .vm-card ol li::before { content: counter(misi, decimal-leading-zero); position: absolute; left: 0; top: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--accent); letter-spacing: 0.1em; } @media (max-width: 768px) { .visi-misi { grid-template-columns: 1fr; } }
+
+.section-head { margin-bottom: 4rem; } .section-head .label-mono { margin-bottom: 1.5rem; } .section-head .h2 { margin-bottom: 1.2rem; } .section-head .lead { font-size: 1.1rem; color: var(--text-soft); max-width: 640px; line-height: 1.7; }
+
+.tab-nav { display: flex; gap: 0.5rem; border-bottom: 1px solid var(--line); margin-bottom: 3rem; flex-wrap: wrap; } .tab-link { padding: 0.8rem 1.2rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-mute); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 300ms var(--ease); } .tab-link:hover { color: var(--text); } .tab-link.active { color: var(--accent); border-bottom-color: var(--accent); } .tab-content { display: none; } .tab-content.active { display: block; animation: pageIn 400ms var(--ease); }
+
+.org-chart { display: flex; flex-direction: column; align-items: center; gap: 2rem; margin-top: 2rem; }
+.org-level { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; width: 100%; }
+.org-node { border: 1px solid var(--accent-soft); padding: 1.2rem 1.5rem; background: var(--bg); min-width: 180px; text-align: center; position: relative; }
+.org-node.root { border-color: var(--accent); color: var(--accent); }
+.org-node span { display: block; font-size: 0.75rem; color: var(--text-mute); font-family: 'JetBrains Mono', monospace; margin-top: 0.5rem; }
+.org-connector { width: 1px; height: 30px; background: var(--line); }
+.org-group { display: flex; flex-direction: column; align-items: center; gap: 1rem; flex: 1; min-width: 180px; }
+.org-group ul { list-style: none; width: 100%; border: 1px dashed var(--line); padding: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+.org-group ul li { font-size: 0.85rem; color: var(--text-soft); padding: 0.3rem 0; text-align: center; }
+
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); margin-bottom: 4rem; } .stat-card { background: var(--bg); padding: 2rem 1.5rem; position: relative; transition: background 400ms var(--ease); } .stat-card::before { content: ''; position: absolute; left: 0; top: 0; width: 2px; height: 0; background: var(--accent); transition: height 600ms var(--ease); } .stat-card:hover::before { height: 100%; } .stat-num { font-family: 'JetBrains Mono', monospace; font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 700; color: var(--accent); line-height: 1; margin-bottom: 0.5rem; } .stat-label { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-mute); } @media (max-width: 900px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.mapel-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); } .mapel-card { background: var(--bg); padding: 1.8rem 1.5rem; position: relative; transition: background 400ms var(--ease); } .mapel-card::before { content: ''; position: absolute; left: 0; top: 0; width: 2px; height: 0; background: var(--accent); transition: height 600ms var(--ease); } .mapel-card:hover::before { height: 100%; } .mapel-card:hover { background: var(--surface-hover); } .mapel-name { font-size: 1.05rem; font-weight: 600; color: var(--text); margin-bottom: 0.4rem; transition: color 400ms var(--ease); } .mapel-card:hover .mapel-name { color: var(--accent); } .mapel-teacher { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--text-mute); letter-spacing: 0.05em; } @media (max-width: 900px) { .mapel-grid { grid-template-columns: repeat(2, 1fr); } } @media (max-width: 600px) { .mapel-grid { grid-template-columns: 1fr; } }
+
+.tugas-item { display: grid; grid-template-columns: auto 150px 1fr auto; gap: 1.5rem; padding: 1.5rem 0; border-bottom: 1px solid var(--line); align-items: center; position: relative; transition: opacity 400ms ease, max-height 400ms ease, margin 400ms ease, padding 400ms ease; max-height: 200px; overflow: hidden; } .tugas-item.vanish { opacity: 0; max-height: 0; margin: 0; padding: 0; border: 0; } .tugas-item::before { content: ''; position: absolute; left: -1rem; top: 0; width: 2px; height: 0; background: var(--accent); transition: height 600ms var(--ease); } .tugas-item:hover::before { height: 100%; } .tugas-check { width: 20px; height: 20px; border: 1px solid var(--line); cursor: pointer; display: grid; place-items: center; transition: all 300ms var(--ease); } .tugas-check:hover { border-color: var(--accent); } .tugas-check.done { background: var(--accent); border-color: var(--accent); } .tugas-check.done::after { content: '✓'; color: var(--bg); font-weight: 700; font-size: 0.8rem; } .tugas-mapel { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--accent); font-weight: 600; letter-spacing: 0.1em; } .tugas-desc { font-size: 0.95rem; color: var(--text); } .tugas-deadline { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; padding: 0.3rem 0.6rem; border: 1px solid var(--warn); color: var(--warn); text-transform: uppercase; letter-spacing: 0.05em; } @media (max-width: 768px) { .tugas-item { grid-template-columns: auto 1fr; gap: 1rem; } .tugas-mapel { grid-column: 2; } .tugas-desc { grid-column: 1 / -1; } .tugas-deadline { grid-column: 1 / -1; justify-self: start; } }
+
+.materi-item { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 1.5rem; border: 1px solid var(--line); margin-bottom: 0.8rem; transition: border-color 400ms var(--ease); } .materi-item:hover { border-color: var(--accent-soft); } .materi-info { display: flex; flex-direction: column; gap: 0.2rem; } .materi-title { font-size: 0.95rem; color: var(--text); font-weight: 500; } .materi-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--text-mute); letter-spacing: 0.05em; } .materi-download { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--accent); text-decoration: none; border: 1px solid var(--accent-soft); padding: 0.4rem 0.8rem; transition: all 300ms var(--ease); } .materi-download:hover { background: var(--accent); color: var(--bg); }
+
+.galeri-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; } .galeri-card { position: relative; overflow: hidden; border: 1px solid var(--line); background: var(--bg); } .galeri-card img { width: 100%; height: 250px; object-fit: cover; display: block; filter: grayscale(20%); transition: filter 400ms var(--ease), transform 600ms var(--ease); } .galeri-card:hover img { filter: grayscale(0%); transform: scale(1.05); } .galeri-desc { padding: 1rem; font-size: 0.85rem; color: var(--text-soft); border-top: 1px solid var(--line-soft); font-family: 'JetBrains Mono', monospace; letter-spacing: 0.02em; } @media (max-width: 900px) { .galeri-grid { grid-template-columns: repeat(2, 1fr); } } @media (max-width: 600px) { .galeri-grid { grid-template-columns: 1fr; } }
+
+.notice-list { border-top: 1px solid var(--line); } .notice-item { display: grid; grid-template-columns: 100px 1fr; gap: 2rem; padding: 1.5rem 0; border-bottom: 1px solid var(--line); align-items: center; position: relative; } .notice-item::before { content: ''; position: absolute; left: -1rem; top: 0; width: 2px; height: 0; background: var(--accent); transition: height 600ms var(--ease); } .notice-item:hover::before { height: 100%; } .notice-date { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; letter-spacing: 0.1em; color: var(--accent); } .notice-text { font-size: 1rem; color: var(--text); } @media (max-width: 768px) { .notice-item { grid-template-columns: 1fr; gap: 0.5rem; } }
+
+.achievement-list { border-top: 1px solid var(--line); } .achievement { display: grid; grid-template-columns: 100px 1fr auto; gap: 2rem; padding: 2rem 0; border-bottom: 1px solid var(--line); align-items: start; position: relative; transition: background 400ms var(--ease); } .achievement::before { content: ''; position: absolute; left: -1rem; top: 0; width: 2px; height: 0; background: var(--accent); transition: height 600ms var(--ease); } .achievement:hover::before { height: 100%; } .ach-year { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; letter-spacing: 0.15em; color: var(--accent); padding-top: 0.2rem; } .ach-body h3 { font-size: 1.2rem; font-weight: 600; color: var(--text); margin-bottom: 0.4rem; letter-spacing: -0.01em; transition: color 400ms var(--ease); } .achievement:hover .ach-body h3 { color: var(--accent); } .ach-body p { color: var(--text-soft); font-size: 0.92rem; line-height: 1.6; max-width: 580px; } .ach-medal { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); border: 1px solid var(--accent-soft); padding: 0.4rem 0.8rem; white-space: nowrap; } @media (max-width: 768px) { .achievement { grid-template-columns: 1fr; gap: 0.8rem; } }
+
+.structure-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); margin-bottom: 4rem; } .role-card, .sekbid-card, .teacher-card, .agenda-card, .picket-card { background: var(--bg); position: relative; transition: background 400ms var(--ease); } .role-card { padding: 2.5rem 2rem; } .role-card:hover, .sekbid-card:hover, .teacher-card:hover, .agenda-card:hover, .picket-card:hover { background: var(--surface-hover); } .role-card::before, .sekbid-card::before, .teacher-card::before, .agenda-card::before, .picket-card::before { content: ''; position: absolute; left: 0; top: 0; width: 2px; height: 0; background: var(--accent); transition: height 600ms var(--ease); } .role-card:hover::before, .sekbid-card:hover::before, .teacher-card:hover::before, .agenda-card:hover::before, .picket-card:hover::before { height: 100%; } .role-name { font-size: 1.4rem; font-weight: 700; color: var(--text); margin-bottom: 0.4rem; transition: color 400ms var(--ease); } .role-card:hover .role-name { color: var(--accent); } @media (max-width: 768px) { .structure-grid { grid-template-columns: 1fr; } }
+
+.absensi-wrap, .kas-list, .kas-catatan, .kas-progress-wrap { border: 1px solid var(--line); background: var(--bg); } .absensi-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-width: 640px; } .absensi-table th, .absensi-table td { padding: 0.9rem 1.5rem; border-bottom: 1px solid var(--line-soft); text-align: left; } .absensi-table th { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; text-transform: uppercase; color: var(--text-mute); } .absensi-table tr:last-child td { border-bottom: none; } .absensi-table tbody tr { transition: background 300ms var(--ease); position: relative; } .absensi-table tbody tr::before { content: ''; position: absolute; left: 0; top: 0; width: 2px; height: 0; background: var(--accent); transition: height 500ms var(--ease); } .absensi-table tbody tr:hover::before { height: 100%; } .absensi-table tbody tr:hover { background: var(--surface); } .status-btn { border: 1px solid var(--line); background: transparent; color: var(--text-mute); padding: 0.4rem 0.8rem; cursor: pointer; font-family: 'JetBrains Mono'; font-size: 0.72rem; transition: all 200ms; } .status-btn:hover { border-color: var(--text); color: var(--text); } .status-btn.active[data-st="H"] { background: var(--accent); color: var(--bg); border-color: var(--accent); } .status-btn.active[data-st="S"] { background: var(--info); color: #0a0a0a; border-color: var(--info); } .status-btn.active[data-st="I"] { background: var(--purple); color: #0a0a0a; border-color: var(--purple); } .status-btn.active[data-st="A"] { background: var(--warn); color: #0a0a0a; border-color: var(--warn); }
+
+.kas-overview { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); margin-bottom: 2rem; } .kas-stat { background: var(--bg); padding: 2rem 1.5rem; } .kas-stat-num { font-family: 'JetBrains Mono', monospace; font-size: clamp(1.3rem, 2.6vw, 1.9rem); font-weight: 700; color: var(--text); } .kas-stat-num.in { color: var(--accent); } .kas-stat-num.out { color: var(--warn); }
+
+.schedule-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); } .day-col { background: var(--bg); } .slot { padding: 0.85rem 1.5rem; border-bottom: 1px solid var(--line-soft); display: grid; grid-template-columns: 90px 1fr auto; gap: 0.8rem; align-items: center; transition: background 300ms var(--ease); position: relative; } .slot.istirahat { background: var(--surface); } .slot.istirahat .slot-subject { color: var(--text-mute); font-style: italic; } .slot::before { content: ''; position: absolute; left: 0; top: 0; width: 2px; height: 0; background: var(--accent); transition: height 400ms var(--ease); } .slot:hover::before { height: 100%; } .slot:hover { background: var(--surface); } @media (max-width: 1100px) { .schedule-grid { grid-template-columns: repeat(2, 1fr); } } @media (max-width: 700px) { .schedule-grid { grid-template-columns: 1fr; } }
+
+.picket-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; } .picket-card { border: 1px solid var(--line); padding: 2rem; position: relative; transition: border-color 400ms; } .picket-card:hover { border-color: var(--accent-soft); }
+
+/* CUSTOM YOUTUBE AUDIO PLAYER */
+.music-player { margin-top: 2rem; border: 1px solid var(--line); padding: 1.5rem; background: var(--surface); }
+.now-playing { font-family: 'JetBrains Mono'; color: var(--accent); font-size: 0.85rem; letter-spacing: 0.05em; margin-top: 1rem; }
+.custom-audio-player { display: flex; align-items: center; gap: 1rem; background: var(--bg); padding: 1rem; border: 1px solid var(--line); }
+.play-pause-btn { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer; font-size: 1rem; display: grid; place-items: center; transition: all 300ms ease; flex-shrink: 0; }
+.play-pause-btn:hover { background: var(--accent); color: var(--bg); }
+.audio-progress-container { flex-grow: 1; height: 6px; background: var(--line-soft); cursor: pointer; position: relative; border-radius: 3px; }
+.audio-progress-bar { height: 100%; background: var(--accent); width: 0%; border-radius: 3px; transition: width 0.1s linear; }
+.time-display { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-mute); min-width: 80px; text-align: right; }
+#hiddenYtPlayer { position: absolute; width: 1px; height: 1px; left: -9999px; top: -9999px; opacity: 0; pointer-events: none; }
+
+footer { border-top: 1px solid var(--line); padding: 4rem 2rem 2rem; margin-top: 4rem; position: relative; z-index: 1; } .footer-inner { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-bottom: 3rem; } @media (max-width: 700px) { .footer-inner { grid-template-columns: 1fr; gap: 2rem; } }
+
+.reveal { opacity: 0; transform: translateY(40px); transition: opacity 1000ms var(--ease), transform 1000ms var(--ease); } .reveal.is-in { opacity: 1; transform: none; } .reveal.delay-1 { transition-delay: 100ms; } .reveal.delay-2 { transition-delay: 200ms; }
+
+.app-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 2rem; } .app-modal.is-open { display: flex; animation: pageIn 400ms var(--ease); } .app-modal-inner { background: var(--bg); border: 1px solid var(--line); max-width: 460px; width: 100%; padding: 2rem; } .form-input { width: 100%; background: transparent; border: 1px solid var(--line); color: var(--text); padding: 0.7rem 0.9rem; font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; outline: none; transition: border-color 300ms var(--ease); } .form-input:focus { border-color: var(--accent); } .form-submit { width: 100%; justify-content: center; margin-top: 0.5rem; }
+
+.admin-only { display: none !important; } body.is-admin .admin-only { display: inline-flex !important; } body.is-admin div.admin-only { display: block !important; } body.is-admin td.admin-only { display: table-cell !important; }
+</style>
+</head>
+<body>
+<div class="noise-overlay"></div>
+
+<div id="loginOverlay" class="login-overlay">
+  <div class="login-box">
+    <div class="login-title">XI-3 SAINTEK 1 DIGITAL</div>
+    <div class="login-sub">// MAN 2 DELI SERDANG</div>
+    <div class="login-tab">
+      <div class="login-tab-btn active" id="tabUser" onclick="switchLoginTab('user')">Pengguna</div>
+      <div class="login-tab-btn" id="tabAdmin" onclick="switchLoginTab('admin')">Admin</div>
+    </div>
+    <div id="formUser">
+      <div style="margin-bottom:1rem;"><label style="display:block;font-family:'JetBrains Mono';font-size:0.7rem;text-transform:uppercase;color:var(--text-mute);margin-bottom:0.4rem;">Nama Lengkap</label><input type="text" class="form-input" id="userNameInput" placeholder="Masukkan Nama Anda"></div>
+      <button class="btn btn--primary form-submit" onclick="loginUser()"><span>Masuk sebagai Pengguna</span></button>
+    </div>
+    <div id="formAdmin" style="display:none;">
+      <div style="margin-bottom:1rem;"><label style="display:block;font-family:'JetBrains Mono';font-size:0.7rem;text-transform:uppercase;color:var(--text-mute);margin-bottom:0.4rem;">Password Admin</label><input type="password" class="form-input" id="adminPassInput" placeholder="Masukkan Password"></div>
+      <div class="login-error" id="adminError"></div>
+      <button class="btn btn--primary form-submit" onclick="loginAdmin()"><span>Masuk sebagai Admin</span></button>
+    </div>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo" data-page-link="beranda"><span class="logo-mark">[XI-3]</span><span class="logo-text">SAINTEK 1 DIGITAL</span></div>
+    <nav class="nav">
+      <a class="nav-link active" data-page-link="beranda">Beranda</a>
+      <a class="nav-link" data-page-link="struktur">Struktur</a>
+      <a class="nav-link" data-page-link="jadwal">Jadwal</a>
+      <a class="nav-link" data-page-link="mapel">Mapel</a>
+      <a class="nav-link" data-page-link="dashboard">Dashboard</a>
+      <a class="nav-link" data-page-link="galeri">Galeri</a>
+      <a class="nav-link" data-page-link="kontak">Kontak</a>
+    </nav>
+    <div class="header-right">
+      <button class="theme-toggle" id="themeToggle" aria-label="Ganti tema"><span class="theme-icon-dark">◐</span><span class="theme-icon-light">◑</span></button>
+      <button class="logout-btn" onclick="logout()">LOGOUT</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="page active" data-page="beranda">
+    <div class="hero">
+      <div class="container">
+        <div class="hero-meta"><span>MAN 2 DELI SERDANG</span><span>TP 2026 / 2027</span><span>SEMESTER GANJIL</span></div>
+        <div class="hero-title"><span class="pre">— Kelas XI SAINTEK —</span><h1>SAINTEK 1<br><span class="accent">DIGITAL</span></h1></div>
+        <div class="hero-subtitle" id="typewriter"></div>
+        <div class="hero-cta" id="heroCta">
+          <a class="btn btn--primary" data-page-link="struktur"><span>Struktur Kelas</span><span class="arrow">→</span></a>
+          <a class="btn" data-page-link="mapel" data-tab-target="tugas"><span>Lihat Semua Tugas</span><span class="arrow">→</span></a>
+        </div>
+      </div>
+      <div class="container"><div class="clock-wrap reveal delay-2"><div class="clock-label">// WAKTU SEKARANG</div><div class="clock-time" id="liveClock">00:00:00</div><div class="clock-date" id="liveDate">— MEMUAT WAKTU —</div></div></div>
+      <div class="container"><div class="widget-tugas reveal delay-2"><div class="widget-head"><div class="widget-title">// Tugas Mendesak</div></div><ul class="widget-list" id="widgetTugasList"></ul><div class="widget-footer"><a class="btn" data-page-link="mapel" data-tab-target="tugas" style="padding: 0.6rem 1rem; font-size: 0.7rem;"><span>Lihat Semua Tugas</span><span class="arrow">→</span></a></div></div></div>
+      <div class="container"><div class="slogan-wrap reveal"><p class="slogan">"Juntos, forjamos el éxito."</p><p class="slogan-arti">// Arti: "Bersama-sama, kami menempa keberhasilan."</p></div></div>
+    </div>
+    <section class="section-pad" id="profil">
+      <div class="container">
+        <div class="sticky-pair">
+          <div class="left"><div class="label-mono reveal">01 / PROFIL KELAS</div><h2 class="h2 reveal delay-1" style="margin-top:1.5rem;margin-bottom:1.5rem;">Ruang belajar yang menempa<br>fokus, iman, dan rasa ingin tahu.</h2></div>
+          <div class="right">
+            <p class="reveal"><strong>XI-3 SAINTEK 1 DIGITAL</strong> adalah salah satu kelas peminatan Ilmu Pengetahuan Alam di MAN 2 Deli Serdang, dikenal dengan ekosistem belajar yang kolaboratif, disiplin, dan adaptif terhadap teknologi. Kelas ini dihuni oleh 36 siswa dengan komposisi 15 laki-laki dan 21 perempuan, masing-masing membawa minat yang berbeda — dari biologi molekuler hingga pemrograman, dari tafsir hingga analisis data.</p>
+            <p class="reveal delay-1">Sebagai kelas <strong>SAINTEK 1 DIGITAL</strong>, kami menempatkan literasi teknologi sebagai bahasa umum. Setiap diskusi, presentasi, dan kerja kelompok dimediasi oleh tools digital — bukan sebagai pengganti proses berpikir, melainkan sebagai akselerator. Tapi di atas semuanya, nilai keislaman tetap menjadi kompas: <em>ilmu yang tidak dibingkai adab akan kehilangan arah.</em></p>
+            <p class="reveal delay-2">Wali kelas kami, <strong>Ibu Try Ade Jumita Wulandari M.Pd., Gr.</strong>, memimpin dengan pendekatan dekat. Beliau mengajar Biologi dan secara konsisten mengingatkan bahwa pertumbuhan sel mirip dengan pertumbuhan karakter: butuh waktu, nutrisi yang tepat, dan lingkungan yang bersih.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section-pad" style="padding-top:0;">
+      <div class="container">
+        <div class="section-head"><div class="label-mono reveal">02 / ARAH & KOMPAS</div><h2 class="h2 reveal delay-1" style="margin-top:1.5rem;">Visi & Misi Kelas</h2></div>
+        <div class="visi-misi reveal delay-2">
+          <div class="vm-card"><h3>// VISI</h3><p class="visi-text">Menjadi kelas SAINTEK yang beriman, berilmu, berakhlak, dan melek teknologi — sebagai fondasi lahirnya generasi pemimpin yang berguna bagi bangsa.</p></div>
+          <div class="vm-card"><h3>// MISI</h3><ol><li>Menumbuhkan budaya literasi sains dan teknologi sebagai bahasa sehari-hari kelas.</li><li>Membangun ukhuwah islamiyah yang erat antar siswa, guru, dan orang tua.</li><li>Menjadikan disiplin belajar sebagai bentuk ibadah, bukan beban.</li></ol></div>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <section class="page" data-page="struktur">
+    <section class="section-pad">
+      <div class="container">
+        <div class="section-head"><div class="label-mono reveal">03 / STRUKTUR KELAS</div><h2 class="h2 reveal delay-1" style="margin-top:1.5rem;">Organisasi & Keuangan</h2></div>
+        <div class="tab-nav reveal delay-2">
+          <div class="tab-link active" data-page-tab="struktur" data-tab-target="struktur-kelas">Struktur Kelas</div>
+          <div class="tab-link" data-page-tab="struktur" data-tab-target="absensi">Absensi Harian</div>
+          <div class="tab-link" data-page-tab="struktur" data-tab-target="kas">Uang Kas</div>
+        </div>
+        
+        <div class="tab-content active" data-tab-page="struktur" data-tab="struktur-kelas">
+          <div class="org-chart reveal delay-2">
+            <div class="org-level">
+              <div class="org-node root">Try Ade Jumita Wulandari M.Pd., Gr<span>Wali Kelas</span></div>
+            </div>
+            <div class="org-connector"></div>
+            <div class="org-level">
+              <div class="org-node">Ridwan<span>Ketua Kelas</span></div>
+              <div class="org-node">Ichan<span>Wakil Ketua</span></div>
+              <div class="org-node">Thahira<span>Bendahara</span></div>
+              <div class="org-node">Putri<span>Wakil Bendahara</span></div>
+              <div class="org-node">Sifa<span>Sekretaris</span></div>
+              <div class="org-node">Taufikia<span>Wakil Sekretaris</span></div>
+            </div>
+            <div class="org-connector"></div>
+            <div class="org-level" id="orgSekbid"></div>
+          </div>
+        </div>
+
+        <div class="tab-content" data-tab-page="struktur" data-tab="absensi">
+          <div class="reveal delay-2" style="margin-bottom: 2rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+            <div class="admin-only" style="display:flex; gap:0.5rem;">
+              <button class="btn btn--primary" id="btnAddMurid"><span>+ Tambah Murid</span></button>
+              <button class="btn" id="btnResetAbsen"><span>↺ Reset Absen</span></button>
+            </div>
+            <div style="display: flex; gap: 1rem; font-family: 'JetBrains Mono'; font-size: 0.8rem; align-items: center;">
+              <span style="color:var(--accent);">■ HADIR</span><span style="color:var(--info);">■ SAKIT</span><span style="color:var(--purple);">■ IZIN</span><span style="color:var(--warn);">■ ALPA</span>
+            </div>
+          </div>
+          <div class="absensi-wrap reveal delay-2" style="overflow-x: auto;">
+            <table class="absensi-table" id="absensiTable"><thead><tr><th>NO</th><th>NAMA</th><th>L/P</th><th>STATUS</th></tr></thead><tbody id="absensiBody"></tbody></table>
+          </div>
+          <div class="kas-overview reveal delay-2" style="margin-top: 2rem; grid-template-columns: repeat(4, 1fr);">
+            <div class="kas-stat"><div style="font-family:'JetBrains Mono';font-size:0.7rem;color:var(--text-mute);margin-bottom:0.6rem;">// HADIR</div><div class="kas-stat-num in" id="rekapH">0</div></div>
+            <div class="kas-stat"><div style="font-family:'JetBrains Mono';font-size:0.7rem;color:var(--text-mute);margin-bottom:0.6rem;">// SAKIT</div><div class="kas-stat-num" style="color:var(--info);" id="rekapS">0</div></div>
+            <div class="kas-stat"><div style="font-family:'JetBrains Mono';font-size:0.7rem;color:var(--text-mute);margin-bottom:0.6rem;">// IZIN</div><div class="kas-stat-num" style="color:var(--purple);" id="rekapI">0</div></div>
+            <div class="kas-stat"><div style="font-family:'JetBrains Mono';font-size:0.7rem;color:var(--text-mute);margin-bottom:0.6rem;">// ALPA</div><div class="kas-stat-num out" id="rekapA">0</div></div>
+          </div>
+        </div>
+
+        <div class="tab-content" data-tab-page="struktur" data-tab="kas">
+          <div class="kas-overview reveal delay-2">
+            <div class="kas-stat"><div style="font-family:'JetBrains Mono';font-size:0.7rem;color:var(--text-mute);margin-bottom:0.6rem;">// PEMASUKAN</div><div class="kas-stat-num in" id="kasTotalIn">Rp 0</div></div>
+            <div class="kas-stat"><div style="font-family:'JetBrains Mono';font-size:0.7rem;color:var(--text-mute);margin-bottom:0.6rem;">// PENGELUARAN</div><div class="kas-stat-num out" id="kasTotalOut">Rp 0</div></div>
+            <div class="kas-stat"><div style="font-family:'JetBrains Mono';font-size:0.7rem;color:var(--text-mute);margin-bottom:0.6rem;">// SALDO</div><div class="kas-stat-num" id="kasSaldo">Rp 0</div></div>
+          </div>
+          <div class="reveal delay-2 admin-only" style="margin-bottom: 2rem;">
+            <button class="btn btn--primary" id="btnAddIn" style="margin-right: 1rem;"><span>+ Pemasukan</span></button>
+            <button class="btn" id="btnAddOut"><span>− Pengeluaran</span></button>
+          </div>
+          <div class="kas-list reveal delay-2" style="padding: 1rem 1.5rem;">
+            <div style="font-family:'JetBrains Mono';font-size:0.82rem;color:var(--accent);margin-bottom:1rem;">// RIWAYAT TRANSAKSI</div>
+            <div id="kasList"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <section class="page" data-page="jadwal">
+    <section class="section-pad">
+      <div class="container">
+        <div class="section-head"><div class="label-mono reveal">04 / JADWAL</div><h2 class="h2 reveal delay-1" style="margin-top:1.5rem;">Roster & Piket</h2></div>
+        <div class="tab-nav reveal delay-2">
+          <div class="tab-link active" data-page-tab="jadwal" data-tab-target="Pelajaran">Jadwal Pelajaran</div>
+          <div class="tab-link" data-page-tab="jadwal" data-tab-target="piket">Jadwal Piket</div>
+        </div>
+        <div class="tab-content active" data-tab-page="jadwal" data-tab="Pelajaran">
+          <div class="schedule-grid" id="scheduleGrid"></div>
+          <div class="section-head" style="margin-top: 4rem; margin-bottom: 2rem;"><div class="label-mono reveal">05 / TENAGA PENGAJAR</div><h2 class="h2 reveal delay-1" style="margin-top:1.5rem;">Profil Guru</h2></div>
+          <div class="structure-grid reveal delay-2" id="teacherGrid"></div>
+        </div>
+        <div class="tab-content" data-tab-page="jadwal" data-tab="piket"><div class="picket-grid" id="picketGrid"></div></div>
+      </div>
+    </section>
+  </section>
+
+  <section class="page" data-page="mapel">
+    <section class="section-pad">
+      <div class="container">
+        <div class="section-head"><div class="label-mono reveal">06 / AKADEMIK</div><h2 class="h2 reveal delay-1" style="margin-top:1.5rem;">Pusat Mata Pelajaran</h2></div>
+        <div class="tab-nav reveal delay-2">
+          <div class="tab-link active" data-page-tab="mapel" data-tab-target="daftar">Daftar Mapel</div>
+          <div class="tab-link" data-page-tab="mapel" data-tab-target="tugas">Tugas / PR</div>
+          <div class="tab-link" data-page-tab="mapel" data-tab-target="materi">Materi / File</div>
+        </div>
+        <div class="tab-content active" data-tab-page="mapel" data-tab="daftar"><div class="mapel-grid" id="mapelGrid"></div></div>
+        <div class="tab-content" data-tab-page="mapel" data-tab="tugas">
+          <div class="admin-only" style="margin-bottom: 2rem; text-align: right;"><button class="btn btn--primary" id="btnAddTugas"><span>+ Tambah Tugas</span></button></div>
+          <div id="tugasList"></div>
+        </div>
+        <div class="tab-content" data-tab-page="mapel" data-tab="materi">
+          <div class="admin-only" style="margin-bottom: 2rem; text-align: right;"><button class="btn btn--primary" id="btnAddMateri"><span>+ Upload Materi</span></button></div>
+          <div id="materiList"></div>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <section class="page" data-page="dashboard">
+    <section class="section-pad">
+      <div class="container">
+        <div class="section-head"><div class="label-mono reveal">07 / DASHBOARD KELAS</div><h2 class="h2 reveal delay-1" style="margin-top:1.5rem;">Pusat Informasi & Hiburan</h2></div>
+        
+        <div class="stats-grid reveal delay-2" id="statistikGrid" style="margin-bottom: 2rem;"></div>
+        <div class="stats-grid reveal delay-2" id="statistikAbsen" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 4rem;"></div>
+
+        <div class="tab-nav reveal delay-2">
+          <div class="tab-link active" data-page-tab="dashboard" data-tab-target="pemberitahuan">Pemberitahuan</div>
+          <div class="tab-link" data-page-tab="dashboard" data-tab-target="prestasi">Prestasi</div>
+          <div class="tab-link" data-page-tab="dashboard" data-tab-target="playlist">Playlist</div>
+        </div>
+
+        <div class="tab-content active" data-tab-page="dashboard" data-tab="pemberitahuan">
+          <div class="section-head"><div class="label-mono reveal">07.A / PAPAN PENGUMUMAN</div><h2 class="h2 reveal delay-1" style="margin-top:1.5rem;font-size:2rem;">Info Dadakan & Harian</h2></div>
+          <div class="reveal delay-2 admin-only" style="margin-bottom: 2rem; text-align: right;"><button class="btn btn--primary" id="btnAddPengumuman"><span>+ Tambah Pengumuman</span></button></div>
+          <div class="notice-list reveal delay-2" id="noticeList" style="margin-bottom:4rem;"></div>
+          
+          <div class="section-head"><div class="label-mono reveal">07.B / AGENDA MENDATANG</div><h2 class="h2 reveal delay-1" style="margin-top:1.5rem;font-size:2rem;">Agenda Besar</h2></div>
+          <div class="structure-grid reveal delay-2" style="grid-template-columns: repeat(3, 1fr); margin-bottom:4rem;">
+            <div class="agenda-card" style="padding: 2rem;"><div style="font-family:'JetBrains Mono';font-size:0.78rem;color:var(--accent);margin-bottom:0.8rem;">13 AGT 2026</div><div style="font-size:1.15rem;font-weight:600;color:var(--text);margin-bottom:0.5rem;">Perayaan 17 Agustusan</div><div style="font-size:0.9rem;color:var(--text-soft);">Lomba: Estafet rinjing, LKBB, Vokal Solo, dll.</div></div>
+            <div class="agenda-card" style="padding: 2rem;"><div style="font-family:'JetBrains Mono';font-size:0.78rem;color:var(--accent);margin-bottom:0.8rem;">14-16 DES 2026</div><div style="font-size:1.15rem;font-weight:600;color:var(--text);margin-bottom:0.5rem;">Ulangan Akhir Semester (UAS)</div><div style="font-size:0.9rem;color:var(--text-soft);">Pelaksanaan dimulai pukul 07.30 WIB setiap harinya.</div></div>
+            <div class="agenda-card" style="padding: 2rem;"><div style="font-family:'JetBrains Mono';font-size:0.78rem;color:var(--accent);margin-bottom:0.8rem;">18 DES 2026</div><div style="font-size:1.15rem;font-weight:600;color:var(--text);margin-bottom:0.5rem;">Classmeeting Semester Ganjil</div><div style="font-size:0.9rem;color:var(--text-soft);">Lomba antar kelas: futsal, voli, catur, dan poster digital.</div></div>
+          </div>
+
+          <div class="section-head"><div class="label-mono reveal">07.C / KALENDER LIBUR</div><h2 class="h2 reveal delay-1" style="margin-top:1.5rem;font-size:2rem;">Hari Besar & Libur</h2></div>
+          <div class="achievement-list reveal delay-2">
+            <div class="achievement"><div class="ach-year">17 AGT 2026</div><div class="ach-body"><h3>Hari Proklamasi Kemerdekaan R.I.</h3><p>Libur nasional dalam rangka memperingati Hari Kemerdekaan Republik Indonesia.</p></div><div class="ach-medal">LIBUR</div></div>
+            <div class="achievement"><div class="ach-year">25 AGT 2026</div><div class="ach-body"><h3>Maulid Nabi Muhammad SAW</h3><p>Libur nasional dalam rangka memperingati Maulid Nabi Muhammad SAW.</p></div><div class="ach-medal">LIBUR</div></div>
+            <div class="achievement"><div class="ach-year">24 DES 2026</div><div class="ach-body"><h3>Cuti Bersama Natal (Malam Natal)</h3><p>Hari libur di Indonesia dalam rangka menjelang Hari Raya Natal.</p></div><div class="ach-medal">LIBUR</div></div>
+            <div class="achievement"><div class="ach-year">25 DES 2026</div><div class="ach-body"><h3>Hari Raya Natal</h3><p>Libur nasional dalam rangka memperingati Hari Raya Natal.</p></div><div class="ach-medal">LIBUR</div></div>
+            <div class="achievement"><div class="ach-year">31 DES 2026</div><div class="ach-body"><h3>Malam Tahun Baru</h3><p>Hari libur di Indonesia dalam rangka menjelang Tahun Baru Masehi 2027.</p></div><div class="ach-medal">LIBUR</div></div>
+          </div>
+        </div>
+
+        <div class="tab-content" data-tab-page="dashboard" data-tab="prestasi">
+          <div class="section-head"><div class="label-mono reveal">07.D / PENCAPAIAN KELAS</div><h2 class="h2 reveal delay-1" style="margin-top:1.5rem;font-size:2rem;">Prestasi & Penghargaan</h2></div>
+          <div class="admin-only" style="margin-bottom: 2rem; text-align: right;"><button class="btn btn--primary" id="btnAddPrestasi"><span>+ Tambah Prestasi</span></button></div>
+          <div class="tab-nav reveal delay-2">
+            <div class="tab-link active" data-page-tab="prestasi" data-tab-target="akademik">Akademik</div>
+            <div class="tab-link" data-page-tab="prestasi" data-tab-target="nonakademik">Non-Akademik</div>
+          </div>
+          <div class="tab-content active" data-tab-page="prestasi" data-tab="akademik"><div class="achievement-list" id="achAkademik"></div></div>
+          <div class="tab-content" data-tab-page="prestasi" data-tab="nonakademik"><div class="achievement-list" id="achNonAkademik"></div></div>
+        </div>
+
+        <div class="tab-content" data-tab-page="dashboard" data-tab="playlist">
+          <div class="section-head"><div class="label-mono reveal">07.E / PLAYLIST KELAS</div><h2 class="h2 reveal delay-1" style="margin-top:1.5rem;font-size:2rem;">Musik & Teman</h2></div>
+          <div id="playlistList"></div>
+          <div class="music-player" id="musicPlayer" style="display:none;">
+            <div class="custom-audio-player">
+              <button id="playPauseBtn" class="play-pause-btn">▶</button>
+              <div class="audio-progress-container" id="progressContainer">
+                <div class="audio-progress-bar" id="progressBar"></div>
+              </div>
+              <span id="timeDisplay" class="time-display">0:00 / 0:00</span>
+            </div>
+            <div id="hiddenYtPlayer"></div>
+            <div class="now-playing" id="nowPlaying"></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </section>
+
+  <section class="page" data-page="galeri">
+    <section class="section-pad">
+      <div class="container">
+        <div class="section-head"><div class="label-mono reveal">08 / DOKUMENTASI</div><h2 class="h2 reveal delay-1" style="margin-top:1.5rem;">Galeri Kegiatan Kelas</h2></div>
+        <div class="reveal delay-2 admin-only" style="margin-bottom: 2rem;"><button class="btn btn--primary" id="btnAddFoto"><span>+ Tambah Foto Baru</span></button></div>
+        <div class="galeri-grid reveal delay-2" id="galeriGrid"></div>
+      </div>
+    </section>
+  </section>
+
+  <section class="page" data-page="kontak">
+    <section class="section-pad">
+      <div class="container">
+        <div class="section-head"><div class="label-mono reveal">09 / KONTAK</div><h2 class="h2 reveal delay-1" style="margin-top:1.5rem;">Narahubung Kelas</h2></div>
+        <div class="structure-grid reveal delay-2" style="grid-template-columns: repeat(3, 1fr);">
+          <div class="role-card" style="padding: 2rem;">
+            <div style="font-family:'JetBrains Mono';font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-mute);margin-bottom:0.5rem;">Wali Kelas</div>
+            <div style="font-size: 1.1rem; font-weight: 600; color: var(--accent); margin-bottom: 0.5rem;">Try Ade Jumita W.</div>
+            <a href="tel:+6285260892060" style="font-family:'JetBrains Mono';font-size:1rem;color:var(--text);text-decoration:none;border:1px solid var(--line);padding:0.5rem 0.8rem;display:inline-block;">+62 852-6089-2060</a>
+          </div>
+          <div class="role-card" style="padding: 2rem;">
+            <div style="font-family:'JetBrains Mono';font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-mute);margin-bottom:0.5rem;">Sekretaris</div>
+            <div style="font-size: 1.1rem; font-weight: 600; color: var(--accent); margin-bottom: 0.5rem;">Sifa</div>
+            <a href="tel:+6285783457027" style="font-family:'JetBrains Mono';font-size:1rem;color:var(--text);text-decoration:none;border:1px solid var(--line);padding:0.5rem 0.8rem;display:inline-block;">+62 857-8345-7027</a>
+          </div>
+          <div class="role-card" style="padding: 2rem;">
+            <div style="font-family:'JetBrains Mono';font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-mute);margin-bottom:0.5rem;">Wakil Sekretaris</div>
+            <div style="font-size: 1.1rem; font-weight: 600; color: var(--accent); margin-bottom: 0.5rem;">Taufikia</div>
+            <a href="tel:+6283849246233" style="font-family:'JetBrains Mono';font-size:1rem;color:var(--text);text-decoration:none;border:1px solid var(--line);padding:0.5rem 0.8rem;display:inline-block;">+62 838-4924-6233</a>
+          </div>
+        </div>
+
+        <div class="section-head" style="margin-top: 4rem; margin-bottom: 2rem;">
+          <div class="label-mono reveal">09.B / MEDIASOSIAL</div>
+          <h2 class="h2 reveal delay-1" style="margin-top:1.5rem;">Akun Resmi Kelas</h2>
+        </div>
+        <div class="structure-grid reveal delay-2" style="grid-template-columns: repeat(3, 1fr);">
+          <a href="https://www.instagram.com/digisaint_one" target="_blank" class="role-card" style="padding: 2rem; text-align: center; text-decoration: none;">
+            <div style="font-size: 2rem; margin-bottom: 1rem;">📸</div>
+            <div style="font-family:'JetBrains Mono';font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-mute);margin-bottom:0.5rem;">Instagram</div>
+            <div style="font-size: 1.1rem; font-weight: 600; color: var(--accent);">@digisaint_one</div>
+          </a>
+          <a href="https://chat.whatsapp.com/EIj6I3tFiElHe0eDNSeJCY" target="_blank" class="role-card" style="padding: 2rem; text-align: center; text-decoration: none;">
+            <div style="font-size: 2rem; margin-bottom: 1rem;">💬</div>
+            <div style="font-family:'JetBrains Mono';font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-mute);margin-bottom:0.5rem;">WhatsApp Group</div>
+            <div style="font-size: 1.1rem; font-weight: 600; color: var(--accent);">Grup Kelas XI-3</div>
+          </a>
+          <a href="https://www.tiktok.com/@digisaint_oneclass" target="_blank" class="role-card" style="padding: 2rem; text-align: center; text-decoration: none;">
+            <div style="font-size: 2rem; margin-bottom: 1rem;">🎶</div>
+            <div style="font-family:'JetBrains Mono';font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-mute);margin-bottom:0.5rem;">TikTok</div>
+            <div style="font-size: 1.1rem; font-weight: 600; color: var(--accent);">@digisaint_oneclass</div>
+          </a>
+        </div>
+      </div>
+    </section>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-col">
+      <h4 style="font-family:'JetBrains Mono';font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:1.2rem;font-weight:500;">// MAN 2 DELI SERDANG</h4>
+      <div style="padding: 1rem 0; border-bottom: 1px solid var(--line-soft); margin-bottom: 1rem;">
+        <span style="font-family:'JetBrains Mono';font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-mute);">Kelas</span>
+        <div style="font-size: 1rem; color: var(--text); font-weight: 500; margin: 0.3rem 0;">XI-3 SAINTEK 1 DIGITAL</div>
+      </div>
+      <div style="padding: 1rem 0;">
+        <span style="font-family:'JetBrains Mono';font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-mute);">Tahun Ajaran</span>
+        <div style="font-size: 1rem; color: var(--text); font-weight: 500; margin-top: 0.3rem;">2026 / 2027 — Semester Ganjil</div>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4 style="font-family:'JetBrains Mono';font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:1.2rem;font-weight:500;">// INFORMASI SINGKAT</h4>
+      <div style="padding: 1rem 0; border-bottom: 1px solid var(--line-soft); margin-bottom: 1rem;">
+        <span style="font-family:'JetBrains Mono';font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-mute);">Wali Kelas</span>
+        <div style="font-size: 1.rem; color: var(--text); font-weight: 500; margin-top: 0.3rem;">Try Ade Jumita W. </div>
+      </div>
+      <div style="padding: 1rem 0;">
+        <span style="font-family:'JetBrains Mono';font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-mute);">Hari Efektif</span>
+        <div style="font-size: 1.rem; color: var(--text); font-weight: 500; margin-top: 0.3rem;">Senin — Sabtu (07.30 - 15.00 WIB)</div>
+      </div>
+    </div>
+  </div>
+  <div style="max-width: 1400px; margin: 0 auto; padding-top: 2rem; border-top: 1px solid var(--line); display: flex; justify-content: space-between; flex-wrap: wrap; font-family: 'JetBrains Mono'; font-size: 0.72rem; color: var(--text-mute);">
+    <span>© 2026-2027 XI-3 SAINTEK 1 DIGITAL</span>
+    <span>BUILD 2026.09.M — STABLE</span>
+  </div>
+</footer>
+
+<div id="modalContainer"></div>
+
+<!-- YouTube IFrame API -->
+<script src="https://www.youtube.com/iframe_api"></script>
+
+<script>
+const ADMIN_PASS = "TMF#9776";
+
+// ==========================================
+// DATA PLAYLIST LAGU (YOUTUBE MUSIC)
+// ==========================================
+let playlistData = [
+  { title: 'Sweet Boy', artist: 'Malcolm Todd', url: 'https://music.youtube.com/watch?v=p9OtySpRRL8' },
+  { title: 'Run Boy Run', artist: 'Woodkid', url: 'https://music.youtube.com/watch?v=UrdaRrArd_c' },
+  { title: 'Earrings', artist: 'Malcolm Todd', url: 'https://music.youtube.com/watch?v=BI9HQCzpDgQ' },
+  { title: 'Rewrite the stars', artist: 'James Arthur & Anne-Marie', url: 'https://music.youtube.com/watch?v=pRfmrE0ToTo' },
+  { title: 'END OF BEGINNING X BABYDOLL', artist: 'Jr stit', url: 'https://music.youtube.com/watch?v=edXEQUQ-T3w' }
+];
+
+const defaultData = {
+  students: [
+    ['Adzka Rayi Zhafirah','P'],['Afifah Mahirah','P'],['Al Fathir','L'],['Annisa Zakiyah','P'],['Arel Alfachrizy','L'],['Azka Huda Adiwirya','L'],
+    ['Azkia Inda Maulia','P'],['Azzacky Al-Mirza','L'],['Beby Alhusna','P'],['Bunga Amelia','P'],['Daim Faeyza','L'],['Elderou Ibni Alvaro','L'],
+    ['Indri Nuraini Nasution','P'],['Ivany Zahira Nadin','P'],['Kaka Achmad Khedira','L'],['Khairul Umam','L'],['Lutfiah Bilqis Sianipar','P'],['M.Ichsanul Arrafath','L'],
+    ['M.Apta Zhafran','L'],['M.Bazli','L'],['M.Fahri','L'],['M.Ridwan NST','L'],['Nadira Alfyza Khairani','P'],['Najla','P'],
+    ['Nur Asifa','P'],['Putri Adzkia','P'],['Radith Hamdani','L'],['Rais Alhadi','L'],['Reihana','P'],['Rodiah','P'],
+    ['Shafa Aulia Efendi','P'],['Syakira','P'],['Taufikia','P'],['Thahira','P'],['Windi','P'],['Zahiratun','P']
+  ],
+  sekbid: [
+    { num:'01', name:'INFORMASI', ketua:'Radit', members:['Bunga','Azkia','Afira','Afifah','Kaka'] },
+    { num:'02', name:'ADMINISTRASI', ketua:'Umam', members:['Zahra','Lutfiah','Azka Huda','Al-Fathir','Rodiah'] },
+    { num:'03', name:'PHBS', ketua:'Elderou', members:['Daim','Arel','Beby','Shafa','Windi'] },
+    { num:'04', name:'WIRAKREASI', ketua:'Bazli', members:['Rais','Fahri','Raihana','Indri','Najla'] },
+    { num:'05', name:'IMTAQ', ketua:'Apta', members:['Annisa','Syakira','Ivany','Nadira','Az-zacky'] }
+  ],
+  tugasData: [
+    { id: 1, mapel: 'B. INDONESIA', desc: 'Buat esai argumentasi 3 paragraf tentang teknologi.', deadline: '15 OKT 2026' },
+    { id: 2, mapel: 'MM / MATEMATIKA', desc: 'Kerjakan latihan soal halaman 45 nomor 1-10.', deadline: '12 OKT 2026' },
+    { id: 3, mapel: 'FISIKA', desc: 'Laporan praktikum gerak lurus beraturan.', deadline: '18 OKT 2026' }
+  ],
+  // PDF Materi telah ditambahkan di sini. Pastikan file PDF ada di folder yang sama dengan index.html
+  materiData: [
+    { mapel: 'INFORMATIKA', title: 'Himpunan (2022)', size: 'PDF', guru: 'Rinaldi Munir', link: 'https://drive.google.com/file/d/1q1TiqLY9_1W8R2IKSXePbilziGweJkq2/view?usp=drivesdk' },
+    { mapel: 'INFORMATIKA', title: 'Kombinatorial (2020)', size: 'PDF', guru: 'Rinaldi Munir', link: 'https://drive.google.com/file/d/1i6s_pfkQAamzqZZXDlXRMQ_SOowWLbiC/view?usp=drivesdk' },
+    { mapel: 'INFORMATIKA', title: 'Algoritma Divide and Conquer (2020)', size: 'PDF', guru: 'Rinaldi Munir', link: 'https://drive.google.com/file/d/1oFo2E1a51gszeK2BYRNnjjRctcZdro3H/view?usp=drivesdk' }
+  ],
+  noticeData: [
+    { date: '03 AGT 2026', text: 'Jam ke-3 Fisika diganti kerja kelompok di lab.' },
+    { date: '03 AGT 2026', text: 'Bukti pembayaran kas minggu ini dikumpul ke Azkia sebelum jam ke-2.' },
+    { date: '02 AGT 2026', text: 'Wali kelas minta perwakilan kelas rapat di ruang guru istirahat ke-2.' }
+  ],
+  achAkademik: [
+    { year: '2026', title: 'Juara 1 OSN Biologi', desc: 'Tingkat Kabupaten Deli Serdang.', medal: 'EMAS' },
+    { year: '2026', title: 'Juara 2 OSN Informatika', desc: 'Tingkat Nasional.', medal: 'PERAK' },
+    { year: '2028', title: 'Juara 2 IOI', desc: 'Tingkat Nasional.', medal: 'PERAK' },
+    { year: '2028', title: 'Juara 1 IOAI', desc: 'Tingkat Internasional.', medal: 'EMAS' },
+    { year: '2026', title: 'Juara 2 KSSN Biologi', desc: 'Tingkat Nasional.', medal: 'PERAK' },
+    { year: '2026', title: 'Juara 3 KSSN B.inggris', desc: 'Tingkat Nasional.', medal: 'PERUNGGU' },
+    { year: '2026', title: 'Juara 1 KSSN Matematika', desc: 'Tingkat Nasional.', medal: 'EMAS' },
+    { year: '2026', title: 'Juara 2 KSSN Matematika', desc: 'Tingkat Nasional', medal: 'PERAK' },
+    { year: '2026', title: 'Juara 3 KSSN Fisika', desc: 'Tingkat Nasional.', medal: 'PERUNGGU' }
+  ],
+  achNonAkademik: [
+    { year: '2026', title: 'Juara 1 Classmeeting Futsal Putra', desc: 'Antar kelas di MAN 2 Deli Serdang.', medal: 'EMAS' },
+    { year: '2026', title: 'Runner-up Classmeeting Voli Putri', desc: 'Antar kelas di MAN 2 Deli Serdang.', medal: 'PERAK' },
+    { year: '2026', title: 'Juara 1 Classmeeting pecah Putri', desc: 'Antar kelas di MAN 2 Deli Serdang.', medal: 'EMAS' },
+    { year: '2026', title: 'Juara 2 Thomas Cup', desc: 'Tingkat Internasional', medal: 'PERAK' },
+    { year: '2026', title: 'Runner-up UEFA Champions League', desc: 'Antar benua', medal: 'EMAS' }
+  ],
+  galeriData: [
+    { src: 'https://cdn.phototourl.com/member/2026-08-07-285b6d50-4476-4347-8c83-918e5f34a152.jpg', desc: 'Foto bersama wali kelas setelah kegiatan Peresmian perangkat kelas' },
+    { src: 'https://cdn.phototourl.com/free/2026-08-07-547100c4-0723-4b45-8f79-e05b36533e39.jpg', desc: 'Foto bumi bersama perangkat kelas' },
+    { src: 'https://cdn.phototourl.com/free/2026-08-07-9bd10d43-1d72-4f27-86e9-69e919ec98a6.jpg', desc: 'Foto sekelas' },
+    { src: 'https://cdn.phototourl.com/member/2026-08-07-d7adc52e-e931-41d0-8f2c-8438e841636f.jpg', desc:'Pemberian hadiah/reward kepada Apta sebagai kultum' },
+    { src: 'https://cdn.phototourl.com/member/2026-08-07-a9b612c1-ef84-4138-832d-7efb31338df3.jpg', desc: 'Penyampaian Informasi terkait Sekbid oleh perangkat kelas' },
+    { src: 'https://cdn.phototourl.com/member/2026-08-07-053d0a79-1a88-41b9-b56c-db1b11beffaf.jpg', desc: 'foto  bersama random' }, 
+    { src: 'https://cdn.phototourl.com/member/2026-08-07-7312706d-89f4-4630-a3b9-f167a5c4d734.png', desc: 'foto Perayaan ultah' }, 
+    { src: 'https://cdn.phototourl.com/member/2026-08-07-929031f0-2108-4a2a-815e-186da5100113.jpg', desc: 'foto random' }, 
+    { src: 'https://cdn.phototourl.com/member/2026-08-07-0d6f49da-d467-4ed9-96b2-ddf41bcb717f.jpg', desc: 'foto random' }
+  ],
+  kasTransactions: [
+    { type:'in', desc:'Iuran kas minggu 1', amount:360000 },
+    { type:'in', desc:'Iuran kas minggu 2', amount:360000 },
+    { type:'out', desc:'Pembelian alat tulis', amount:85000 }
+  ],
+  absensiState: {}
+};
+
+let state = JSON.parse(localStorage.getItem('saintek_state')) || defaultData;
+let students = state.students;
+let sekbid = state.sekbid;
+let tugasData = state.tugasData;
+let materiData = state.materiData;
+let noticeData = state.noticeData;
+let achAkademik = state.achAkademik;
+let achNonAkademik = state.achNonAkademik;
+let galeriData = state.galeriData;
+let kasTransactions = state.kasTransactions;
+let absensiState = state.absensiState || {};
+
+function saveState() {
+  state.students = students; state.sekbid = sekbid; state.tugasData = tugasData; state.materiData = materiData;
+  state.noticeData = noticeData; state.achAkademik = achAkademik; state.achNonAkademik = achNonAkademik;
+  state.galeriData = galeriData; state.kasTransactions = kasTransactions; state.absensiState = absensiState;
+  try { localStorage.setItem('saintek_state', JSON.stringify(state)); } catch (e) { console.warn("Penyimpanan lokal diblokir."); }
+}
+
+function switchLoginTab(type) {
+  const errBox = document.getElementById('adminError'); if(errBox) errBox.textContent = '';
+  if(type === 'user') { document.getElementById('tabUser').classList.add('active'); document.getElementById('tabAdmin').classList.remove('active'); document.getElementById('formUser').style.display = 'block'; document.getElementById('formAdmin').style.display = 'none'; }
+  else { document.getElementById('tabUser').classList.remove('active'); document.getElementById('tabAdmin').classList.add('active'); document.getElementById('formUser').style.display = 'none'; document.getElementById('formAdmin').style.display = 'block'; }
+}
+function showLogin() { const overlay = document.getElementById('loginOverlay'); overlay.classList.remove('hide'); document.body.style.overflow = 'hidden'; }
+function hideLogin() { const overlay = document.getElementById('loginOverlay'); overlay.classList.add('hide'); document.body.style.overflow = 'auto'; }
+function loginUser() { const name = document.getElementById('userNameInput').value.trim(); if(name) { sessionStorage.setItem('saintek_session', JSON.stringify({ role: 'user', name: name })); hideLogin(); applyRole('user'); goToPage('beranda'); } else { alert("Silakan masukkan nama terlebih dahulu."); } }
+function loginAdmin() {
+  const pass = document.getElementById('adminPassInput').value.trim();
+  const errBox = document.getElementById('adminError');
+  if(pass === ADMIN_PASS) { errBox.textContent = ''; sessionStorage.setItem('saintek_session', JSON.stringify({ role: 'admin', name: 'Administrator' })); hideLogin(); applyRole('admin'); goToPage('beranda'); }
+  else { errBox.textContent = "PASSWORD ANDA SALAH!"; document.getElementById('adminPassInput').value = ''; }
+}
+function logout() { sessionStorage.removeItem('saintek_session'); document.body.classList.remove('is-admin'); document.getElementById('userNameInput').value = ''; document.getElementById('adminPassInput').value = ''; document.getElementById('adminError').textContent = ''; goToPage('beranda'); showLogin(); }
+function applyRole(role) { if(role === 'admin') { document.body.classList.add('is-admin'); } else { document.body.classList.remove('is-admin'); } renderAll(); }
+
+const schedule = {
+  'SENIN': [['07.30–08.15','BIOLOGI','JM'],['08.15–09.00','BIOLOGI','JM'],['09.00–09.45','FISIKA','HN'],['09.45–10.00','ISTIRAHAT','—'],['10.00–10.45','FISIKA','HN'],['10.45–11.30','B. INDONESIA','UR'],['11.30–12.15','B. INDONESIA','UR'],['13.00–13.45','INFORMATIKA','AW'],['13.45–14.30','INFORMATIKA','AW']],
+  'SELASA': [['07.30–08.15','MLPP','PA'],['08.15–09.00','MLPP','PA'],['09.00–09.45','AKIDAH AKHLAK','BK'],['09.45–10.00','ISTIRAHAT','—'],['10.00–10.45','AKIDAH AKHLAK','BK'],['10.45–11.30','MLTQ','RG'],['11.30–12.15','QUR’AN HADIST','LY'],['13.00–13.45','INFORMATIKA','AW'],['13.45–14.30','INFORMATIKA','AW']],
+  'RABU': [['07.30–08.15','B. INGGRIS','RH'],['08.15–09.00','B. INGGRIS','RH'],['09.00–09.45','B. INGGRIS','RH'],['09.45–10.00','ISTIRAHAT','—'],['10.00–10.45','KIMIA','DS'],['10.45–11.30','KIMIA','DS'],['11.30–12.15','BIOLOGI','JM'],['13.00–13.45','BIOLOGI','JM'],['13.45–14.30','FISIKA','HN']],
+  'KAMIS': [['07.30–08.15','B. ARAB','NZ'],['08.15–09.00','B. ARAB','NZ'],['09.00–09.45','SKI','HM'],['09.45–10.00','ISTIRAHAT','—'],['10.00–10.45','PKN','MJ'],['10.45–11.30','PKN','MJ'],['11.30–12.15','SEJARAH','FI'],['13.00–13.45','SEJARAH','FI'],['13.45–14.30','PJOK','RO']],
+  'JUMAT': [['07.30–08.15','MM','DW'],['08.15–09.00','MM','DW'],['09.00–09.45','KIMIA','DS'],['09.45–10.00','ISTIRAHAT','—'],['10.00–10.45','KIMIA','DS'],['10.45–11.30','MMTL','PT'],['11.30–12.15','MMTL','PT'],['13.00–13.45','—',''],['13.45–14.30','—','']],
+  'SABTU': [['07.30–08.15','FIKIH','RI'],['08.15–09.00','FIKIH','RI'],['09.00–09.45','MMTL','PT'],['09.45–10.00','ISTIRAHAT','—'],['10.00–10.45','MMTL','PT'],['10.45–11.30','SENI','NN'],['11.30–12.15','SENI','NN'],['13.00–13.45','SKI','HM'],['13.45–14.30','MM','DW']]
+};
+
+const picket = [
+  { day:'SENIN', coord:'Sifa', role:'Sekretaris', members:['Ridwan','Ichan','Apta','Nadira','Windi','Umam'] },
+  { day:'SELASA', coord:'Elderou Ibni Alvaro', role:'Ketua Sekbid PHBS', members:['Thahira','Rodiah','Azka Huda','Bunga','Beby'] },
+  { day:'RABU', coord:'Taufikia', role:'Wakil Sekretaris', members:['Radit','Arel','Kaka','Shafa','Az-zacky','Zahra'] },
+  { day:'KAMIS', coord:'Indri', role:'Anggota PHBS', members:['Rais','Putri','Ivany','Fahri'] },
+  { day:'JUMAT', coord:'Ichan', role:'Wakil Ketua', members:['Najla','Bazli','Afira','Afifah','Lutfiah','Azkia'] },
+  { day:'SABTU', coord:'Rais', role:'Anggota PHBS', members:['Syakira','Al-Fathir','Daim','Raihana','Annisa'] }
+];
+
+const teachers = [
+  ['AW', 'Saidina Aidta Wicaksana, A.Md.Kom', 'INFORMATIKA'], ['PA', 'Putri Ananda Siregar, S.Ak', 'MLPP'], ['BK', 'Bukhari, S.Pd.I.', 'AKIDAH AKHLAK'], ['RG', 'Ramadhan Gafar, M.Ag.', 'MLTQ'], ['LY', 'Lili Yuliana, S.Pd.I., Gr', 'QUR’AN HADIST'], ['RH', 'Raihana Sakdiyah, S.Pd.', 'B. INGGRIS'], ['DS', 'Diki Suprapto, M.Pd., Gr.', 'KIMIA'], ['NZ', 'Muhammad Nazwir Harahap, S.Pd.', 'B. ARAB'], ['HM', "Halimahtussa'diah, S.Pd.I.", 'SKI'], ['MJ', 'Mita Juehara, S.Pd., Gr.', 'PKN'], ['FI', 'Fiki Arul Lansyah, S.Pd., Gr.', 'SEJARAH'], ['RO', 'Rio Agus, S.Pd.', 'PJOK'], ['DW', 'Dwi Ayu Apriani, S.Pd., Gr.', 'MM'], ['PT', 'Putri Winda Sari Batubara, S.Si.', 'MMTL'], ['HN', 'Henri Sasti, M.Sc', 'FISIKA'], ['UR', 'Ulfah Rani Daulay, M.Pd., Gr.', 'B. INDONESIA'], ['JM', 'Try Ade Jumita Wulandari, M.Pd., Gr', 'BIOLOGI'], ['NN', 'Nuralifia Neami Nasution, S.Pd.', 'SENI'], ['RI', 'Risnul Hilman Siregar, S.Pd.I., Gr.', 'FIKIH']
+];
+
+const mapelList = ['SKI', 'SENI', 'FIKIH', 'MMTL', 'KIMIA', 'MM', 'PJOK', 'SEJARAH', 'PKN', 'B. ARAB', 'B. INGGRIS', 'QUR’AN HADIST', 'MLTQ', 'AKIDAH AKHLAK', 'MLPP', 'INFORMATIKA', 'B. INDONESIA', 'BIOLOGI', 'FISIKA'];
+
+function renderAbsensi() {
+  document.getElementById('absensiBody').innerHTML = students.map((s, i) => {
+    const currentStatus = absensiState[i] || 'H';
+    return `<tr><td style="color:var(--text-mute);font-family:'JetBrains Mono';">${String(i+1).padStart(2,'0')}</td><td style="color:var(--text);font-weight:500;">${s[0]}</td><td style="color:var(--text-mute);">${s[1]}</td><td><div style="display:flex;gap:0.3rem;" data-st-group data-index="${i}"><button class="status-btn ${currentStatus==='H'?'active':''}" data-st="H">H</button><button class="status-btn ${currentStatus==='S'?'active':''}" data-st="S">S</button><button class="status-btn ${currentStatus==='I'?'active':''}" data-st="I">I</button><button class="status-btn ${currentStatus==='A'?'active':''}" data-st="A">A</button></div></td></tr>`;
+  }).join('');
+  document.querySelectorAll('#absensiBody [data-st-group]').forEach(group => { group.querySelectorAll('.status-btn').forEach(btn => { btn.addEventListener('click', () => { const idx = group.dataset.index; absensiState[idx] = btn.dataset.st; saveState(); group.querySelectorAll('.status-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); updateRekap(); }); }); });
+  updateRekap();
+}
+function updateRekap() {
+  let h=0, s=0, i=0, a=0; Object.values(absensiState).forEach(st => { if(st === 'H') h++; if(st === 'S') s++; if(st === 'I') i++; if(st === 'A') a++; });
+  const totalS = students.length; h = totalS - (s + i + a);
+  document.getElementById('rekapH').textContent = h; document.getElementById('rekapS').textContent = s; document.getElementById('rekapI').textContent = i; document.getElementById('rekapA').textContent = a;
+  renderStatistik();
+}
+function renderOrgChart() { document.getElementById('orgSekbid').innerHTML = sekbid.map(s => `<div class="org-group"><div class="org-node">${s.name}<span>Ketua: ${s.ketua}</span></div><ul>${s.members.map(m => `<li>${m}</li>`).join('')}</ul></div>`).join(''); }
+function renderSchedule() {
+  document.getElementById('scheduleGrid').innerHTML = Object.keys(schedule).map(day => {
+    const slots = schedule[day]; const count = slots.filter(s => s[0]).length;
+    return `<div class="day-col"><div style="padding:1.5rem 1.5rem 1rem;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:baseline;"><div style="font-family:'JetBrains Mono';font-size:0.82rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:700;">${day}</div><div style="font-family:'JetBrains Mono';font-size:0.7rem;color:var(--text-mute);">${count} SLOT</div></div><div>${slots.map(s => { if (!s[0]) return ''; const isBreak = s[1].includes('ISTIRAHAT'); return `<div class="slot ${isBreak?'istirahat':''}"><div style="font-family:'JetBrains Mono';font-size:0.72rem;color:var(--text-mute);">${s[0]}</div><div class="slot-subject" style="font-size:0.88rem;font-weight:500;color:var(--text);">${s[1]}</div><div style="font-family:'JetBrains Mono';font-size:0.7rem;color:var(--accent);">${s[2]||'—'}</div></div>`; }).join('')}</div></div>`;
+  }).join('');
+}
+function renderPicket() { document.getElementById('picketGrid').innerHTML = picket.map(p => `<div class="picket-card"><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--line-soft);"><div style="font-family:'JetBrains Mono';font-size:0.92rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:700;">${p.day}</div></div><div style="margin-bottom:1rem;font-size:0.85rem;color:var(--text-soft);">Koordinator: <strong style="color:var(--accent);">${p.coord}</strong> <small style="color:var(--text-mute);">(${p.role})</small></div><div style="display:flex;flex-wrap:wrap;gap:0.4rem;">${p.members.map(m => `<span style="font-size:0.8rem;padding:0.35rem 0.7rem;border:1px solid var(--line);color:var(--text-soft);">${m}</span>`).join('')}</div></div>`).join(''); }
+function renderTeachers() { document.getElementById('teacherGrid').innerHTML = teachers.map(t => `<div class="role-card" style="padding: 2rem 1.8rem;"><div style="display:inline-block;font-family:'JetBrains Mono';font-size:0.72rem;letter-spacing:0.15em;color:var(--accent);border:1px solid var(--accent-soft);padding:0.25rem 0.6rem;margin-bottom:1.2rem;">[ ${t[0]} ]</div><div style="font-size:1.05rem;font-weight:600;color:var(--text);margin-bottom:0.4rem;">${t[1]}</div><div style="font-family:'JetBrains Mono';font-size:0.72rem;color:var(--text-mute);text-transform:uppercase;">${t[2]}</div></div>`).join(''); }
+function renderMapel() { document.getElementById('mapelGrid').innerHTML = mapelList.map(m => `<div class="mapel-card"><div class="mapel-name">${m}</div><div class="mapel-teacher">// KLIK UNTUK DETAIL</div></div>`).join(''); }
+function renderTugas() {
+  document.getElementById('tugasList').innerHTML = tugasData.map(t => `<div class="tugas-item" data-id="${t.id}"><div class="tugas-check" onclick="completeTugas(${t.id})"></div><div class="tugas-mapel">${t.mapel}</div><div class="tugas-desc">${t.desc}</div><div class="tugas-deadline">${t.deadline}</div></div>`).join('');
+  document.getElementById('widgetTugasList').innerHTML = tugasData.slice(0, 3).map(t => `<li><span><strong style="color:var(--accent);margin-right:0.5rem;">${t.mapel}</strong> ${t.desc}</span><span class="deadline">${t.deadline}</span></li>`).join('');
+}
+function completeTugas(id) { const el = document.querySelector(`.tugas-item[data-id="${id}"]`); if (el) { el.classList.add('vanish'); setTimeout(() => { tugasData = tugasData.filter(t => t.id !== id); saveState(); renderTugas(); }, 400); } }
+function renderMateri() {
+  const list = document.getElementById('materiList');
+  if (materiData.length === 0) { list.innerHTML = `<div style="text-align: center; padding: 3rem; color: var(--text-mute); font-family: 'JetBrains Mono'; border: 1px dashed var(--line);">Belum ada materi diunggah. Admin bisa upload via tombol atau menambah manual di kode.</div>`; return; }
+  list.innerHTML = materiData.map(m => `<div class="materi-item"><div class="materi-info"><div class="materi-title">${m.title}</div><div class="materi-meta">${m.mapel} · ${m.size} · OLEH: ${m.guru}</div></div><a href="${m.link}" target="_blank" class="materi-download">UNDUH</a></div>`).join('');
+}
+function renderNotice() { document.getElementById('noticeList').innerHTML = noticeData.map(n => `<div class="notice-item"><div class="notice-date">${n.date}</div><div class="notice-text">${n.text}</div></div>`).join(''); }
+function renderAch() { const mapAch = (a) => `<div class="achievement"><div class="ach-year">${a.year}</div><div class="ach-body"><h3>${a.title}</h3><p>${a.desc}</p></div><div class="ach-medal">${a.medal}</div></div>`; document.getElementById('achAkademik').innerHTML = achAkademik.map(mapAch).join(''); document.getElementById('achNonAkademik').innerHTML = achNonAkademik.map(mapAch).join(''); renderStatistik(); }
+function renderGaleri() { document.getElementById('galeriGrid').innerHTML = galeriData.map(g => `<div class="galeri-card"><img src="${g.src}" alt="${g.desc}"><div class="galeri-desc">// ${g.desc}</div></div>`).join(''); }
+function renderKas() {
+  const totalIn = kasTransactions.filter(t => t.type === 'in').reduce((s, t) => s + t.amount, 0);
+  const totalOut = kasTransactions.filter(t => t.type === 'out').reduce((s, t) => s + t.amount, 0);
+  const saldo = totalIn - totalOut; const rupiah = n => 'Rp ' + n.toLocaleString('id-ID');
+  document.getElementById('kasTotalIn').textContent = rupiah(totalIn); document.getElementById('kasTotalOut').textContent = rupiah(totalOut); document.getElementById('kasSaldo').textContent = rupiah(saldo);
+  document.getElementById('kasList').innerHTML = kasTransactions.map(t => `<div style="display:flex;justify-content:space-between;padding:0.6rem 0;border-bottom:1px solid var(--line-soft);"><div><div style="font-size:0.88rem;color:var(--text);">${t.desc}</div><div style="font-family:'JetBrains Mono';font-size:0.68rem;color:var(--text-mute);text-transform:uppercase;">${t.type === 'in' ? 'PEMASUKAN' : 'PENGELUARAN'}</div></div><div style="font-family:'JetBrains Mono';color:${t.type === 'in' ? 'var(--accent)' : 'var(--warn)'};">${t.type === 'in' ? '+' : '−'}${rupiah(t.amount)}</div></div>`).join('');
+  renderStatistik();
+}
+function renderStatistik() {
+  const totalSiswa = students.length; const totalKas = kasTransactions.reduce((s, t) => s + (t.type === 'in' ? t.amount : -t.amount), 0); const totalPrestasi = achAkademik.length + achNonAkademik.length;
+  document.getElementById('statistikGrid').innerHTML = `<div class="stat-card"><div class="stat-num">${totalSiswa}</div><div class="stat-label">Siswa Aktif</div></div><div class="stat-card"><div class="stat-num">${totalPrestasi}</div><div class="stat-label">Total Prestasi</div></div><div class="stat-card"><div class="stat-num">${tugasData.length}</div><div class="stat-label">Tugas Aktif</div></div><div class="stat-card"><div class="stat-num">Rp ${totalKas.toLocaleString('id-ID')}</div><div class="stat-label">Saldo Kas</div></div>`;
+  let h=0, s=0, i=0, a=0; Object.values(absensiState).forEach(st => { if(st === 'H') h++; if(st === 'S') s++; if(st === 'I') i++; if(st === 'A') a++; }); h = totalSiswa - (s + i + a);
+  document.getElementById('statistikAbsen').innerHTML = `<div class="stat-card"><div class="stat-num" style="color:var(--accent);">${h}</div><div class="stat-label">Hadir</div></div><div class="stat-card"><div class="stat-num" style="color:var(--info);">${s}</div><div class="stat-label">Sakit</div></div><div class="stat-card"><div class="stat-num" style="color:var(--purple);">${i}</div><div class="stat-label">Izin</div></div><div class="stat-card"><div class="stat-num" style="color:var(--warn);">${a}</div><div class="stat-label">Alpa</div></div>`;
+}
+
+// ==========================================
+// CUSTOM YOUTUBE AUDIO PLAYER LOGIC
+// ==========================================
+let ytPlayer;
+let currentSongIndex = -1;
+let progressInterval;
+
+function onYouTubeIframeAPIReady() {
+  ytPlayer = new YT.Player('hiddenYtPlayer', {
+    height: '1',
+    width: '1',
+    playerVars: { 'autoplay': 0, 'controls': 0 },
+    events: {
+      'onReady': onPlayerReady,
+      'onStateChange': onPlayerStateChange
+    }
+  });
+}
+
+function onPlayerReady(event) { /* Player siap */ }
+
+function onPlayerStateChange(event) {
+  const btn = document.getElementById('playPauseBtn');
+  if (event.data == YT.PlayerState.PLAYING) {
+    btn.textContent = '⏸';
+    startProgressUpdate();
+  } else if (event.data == YT.PlayerState.PAUSED) {
+    btn.textContent = '▶';
+    stopProgressUpdate();
+  } else if (event.data == YT.PlayerState.ENDED) {
+    btn.textContent = '▶';
+    stopProgressUpdate();
+    document.getElementById('progressBar').style.width = '100%';
+  }
+}
+
+function renderPlaylist() {
+  const list = document.getElementById('playlistList');
+  if (playlistData.length === 0) {
+    list.innerHTML = `<div style="text-align: center; padding: 3rem; color: var(--text-mute); font-family: 'JetBrains Mono'; border: 1px dashed var(--line);">Belum ada lagu di playlist.</div>`;
+    return;
+  }
+  list.innerHTML = playlistData.map((song, index) => `
+    <div class="materi-item" style="cursor:pointer;" onclick="playSong(${index})">
+      <div class="materi-info">
+        <div class="materi-title">${song.title}</div>
+        <div class="materi-meta">${song.artist}</div>
+      </div>
+      <div style="font-family: 'JetBrains Mono'; color: var(--accent); font-size: 0.72rem; border: 1px solid var(--accent-soft); padding: 0.4rem 0.8rem;">▶ PUTAR</div>
+    </div>
+  `).join('');
+}
+
+function playSong(index) {
+  currentSongIndex = index;
+  const song = playlistData[index];
+  const url = song.url;
+  let videoId = '';
+
+  if (url.includes('v=')) {
+    videoId = url.split('v=')[1].split('&')[0];
+  } else if (url.includes('youtu.be/')) {
+    videoId = url.split('youtu.be/')[1].split('?')[0];
+  }
+
+  document.getElementById('musicPlayer').style.display = 'block';
+  document.getElementById('nowPlaying').textContent = `// SEDANG DIPUTAR: ${song.title} - ${song.artist}`;
+
+  if (ytPlayer && ytPlayer.loadVideoById) {
+    ytPlayer.loadVideoById(videoId);
+    ytPlayer.playVideo();
+  }
+}
+
+function startProgressUpdate() {
+  stopProgressUpdate();
+  progressInterval = setInterval(() => {
+    if (ytPlayer && ytPlayer.getCurrentTime) {
+      const currentTime = ytPlayer.getCurrentTime() || 0;
+      const duration = ytPlayer.getDuration() || 0;
+      if (duration > 0) {
+        const percent = (currentTime / duration) * 100;
+        document.getElementById('progressBar').style.width = percent + '%';
+        document.getElementById('timeDisplay').textContent = `${formatTime(currentTime)} / ${formatTime(duration)}`;
+      }
+    }
+  }, 500);
+}
+
+function stopProgressUpdate() { clearInterval(progressInterval); }
+
+function formatTime(sec) {
+  if (!sec || isNaN(sec)) return '0:00';
+  const minutes = Math.floor(sec / 60);
+  const seconds = Math.floor(sec % 60);
+  return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+}
+
+document.getElementById('playPauseBtn').addEventListener('click', () => {
+  if (ytPlayer) {
+    if (ytPlayer.getPlayerState() == YT.PlayerState.PLAYING) {
+      ytPlayer.pauseVideo();
+    } else {
+      ytPlayer.playVideo();
+    }
+  }
+});
+
+document.getElementById('progressContainer').addEventListener('click', (e) => {
+  if (ytPlayer && ytPlayer.getDuration) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const percent = clickX / rect.width;
+    const duration = ytPlayer.getDuration();
+    if (duration > 0) {
+      ytPlayer.seekTo(duration * percent, true);
+      document.getElementById('progressBar').style.width = (percent * 100) + '%';
+    }
+  }
+});
+
+function renderAll() { renderAbsensi(); renderOrgChart(); renderSchedule(); renderPicket(); renderTeachers(); renderMapel(); renderTugas(); renderMateri(); renderNotice(); renderAch(); renderGaleri(); renderKas(); renderStatistik(); renderPlaylist(); }
+
+function switchTab(pageName, tabName) { document.querySelectorAll(`.tab-content[data-tab-page="${pageName}"]`).forEach(c => c.classList.remove('active')); document.querySelectorAll(`.tab-link[data-page-tab="${pageName}"]`).forEach(l => l.classList.remove('active')); const content = document.querySelector(`.tab-content[data-tab-page="${pageName}"][data-tab="${tabName}"]`); const link = document.querySelector(`.tab-link[data-page-tab="${pageName}"][data-tab-target="${tabName}"]`); if (content) content.classList.add('active'); if (link) link.classList.add('active'); }
+document.querySelectorAll('.tab-link').forEach(link => { link.addEventListener('click', () => switchTab(link.dataset.pageTab, link.dataset.tabTarget)); });
+function goToPage(pageName, tabName = null) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); const target = document.querySelector(`.page[data-page="${pageName}"]`); if (target) target.classList.add('active'); document.querySelectorAll('.nav-link').forEach(l => l.classList.toggle('active', l.dataset.pageLink === pageName)); window.scrollTo({ top: 0, behavior: 'smooth' }); if (tabName) setTimeout(() => switchTab(pageName, tabName), 100); if (target) { target.querySelectorAll('.reveal').forEach(el => { el.classList.remove('is-in'); io.observe(el); }); } }
+document.addEventListener('click', e => { const link = e.target.closest('[data-page-link]'); if (link) { e.preventDefault(); goToPage(link.dataset.pageLink, link.dataset.tabTarget); } });
+
+function openModal(htmlContent) { const mc = document.getElementById('modalContainer'); mc.innerHTML = `<div class="app-modal is-open" onclick="if(event.target===this)closeModal()"><div class="app-modal-inner">${htmlContent}</div></div>`; }
+function closeModal() { document.getElementById('modalContainer').innerHTML = ''; }
+
+document.getElementById('btnAddIn').addEventListener('click', () => { openModal(`<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--line);"><div style="font-family:'JetBrains Mono';text-transform:uppercase;color:var(--accent);">// TAMBAH PEMASUKAN</div><button onclick="closeModal()" style="background:transparent;border:none;color:var(--text-mute);cursor:pointer;font-size:1.3rem;">×</button></div><div><div style="margin-bottom:1rem;"><label style="display:block;font-family:'JetBrains Mono';font-size:0.7rem;text-transform:uppercase;color:var(--text-mute);margin-bottom:0.4rem;">Keterangan</label><input type="text" class="form-input" id="kDesc"></div><div style="margin-bottom:1rem;"><label style="display:block;font-family:'JetBrains Mono';font-size:0.7rem;text-transform:uppercase;color:var(--text-mute);margin-bottom:0.4rem;">Jumlah (Rp)</label><input type="number" class="form-input" id="kAmt"></div><button class="btn btn--primary form-submit" onclick="kasTransactions.push({type:'in',desc:kDesc.value,amount:parseInt(kAmt.value)});saveState();renderKas();closeModal();"><span>Simpan</span></button></div>`); });
+document.getElementById('btnAddOut').addEventListener('click', () => { openModal(`<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--line);"><div style="font-family:'JetBrains Mono';text-transform:uppercase;color:var(--warn);">// TAMBAH PENGELUARAN</div><button onclick="closeModal()" style="background:transparent;border:none;color:var(--text-mute);cursor:pointer;font-size:1.3rem;">×</button></div><div><div style="margin-bottom:1rem;"><label style="display:block;font-family:'JetBrains Mono';font-size:0.7rem;text-transform:uppercase;color:var(--text-mute);margin-bottom:0.4rem;">Keterangan</label><input type="text" class="form-input" id="kDesc"></div><div style="margin-bottom:1rem;"><label style="display:block;font-family:'JetBrains Mono';font-size:0.7rem;text-transform:uppercase;color:var(--text-mute);margin-bottom:0.4rem;">Jumlah (Rp)</label><input type="number" class="form-input" id="kAmt"></div><button class="btn btn--primary form-submit" onclick="kasTransactions.push({type:'out',desc:kDesc.value,amount:parseInt(kAmt.value)});saveState();renderKas();closeModal();"><span>Simpan</span></button></div>`); });
+document.getElementById('btnAddMurid').addEventListener('click', () => { openModal(`<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--line);"><div style="font-family:'JetBrains Mono';text-transform:uppercase;color:var(--accent);">// TAMBAH MURID</div><button onclick="closeModal()" style="background:transparent;border:none;color:var(--text-mute);cursor:pointer;font-size:1.3rem;">×</button></div><div><div style="margin-bottom:1rem;"><label style="display:block;font-family:'JetBrains Mono';font-size:0.7rem;text-transform:uppercase;color:var(--text-mute);margin-bottom:0.4rem;">Nomor Absen</label><input type="number" class="form-input" id="mNo" min="1" value="${students.length+1}"></div><div style="margin-bottom:1rem;"><label style="display:block;font-family:'JetBrains Mono';font-size:0.7rem;text-transform:uppercase;color:var(--text-mute);margin-bottom:0.4rem;">Nama Lengkap</label><input type="text" class="form-input" id="mName"></div><div style="margin-bottom:1rem;"><label style="display:block;font-family:'JetBrains Mono';font-size:0.7rem;text-transform:uppercase;color:var(--text-mute);margin-bottom:0.4rem;">Jenis Kelamin (L/P)</label><input type="text" class="form-input" id="mGender" placeholder="L atau P" maxlength="1"></div><button class="btn btn--primary form-submit" onclick="students.splice(parseInt(mNo.value)-1,0,[mName.value.toUpperCase(),mGender.value.toUpperCase()]);saveState();renderAbsensi();closeModal();"><span>Simpan</span></button></div>`); });
+document.getElementById('btnResetAbsen').addEventListener('click', () => { absensiState = {}; saveState(); renderAbsensi(); });
+document.getElementById('btnAddTugas').addEventListener('click', () => { openModal(`<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--line);"><div style="font-family:'JetBrains Mono';text-transform:uppercase;color:var(--accent);">// TAMBAH TUGAS</div><button onclick="closeModal()" style="background:transparent;border:none;color:var(--text-mute);cursor:pointer;font-size:1.3rem;">×</button></div><div><div style="margin-bottom:1rem;"><label style="display:block;font-family:'JetBrains Mono';font-size:0.7rem;text-transform:uppercase;color:var(--text-mute);margin-bottom:0.4rem;">Mata Pelajaran</label><input type="text" class="form-input" id="tMapel"></div><div style="margin-bottom:1rem;"><label style="display:block;font-family:'JetBrains Mono';font-size:0.7rem;text-transform:uppercase;color:var(--text-mute);margin-bottom:0.4rem;">Deskripsi Tugas</label><input type="text" class="form-input" id="tDesc"></div><div style="margin-bottom:1rem;"><label style="display:block;font-family:'JetBrains Mono';font-size:0.7rem;text-transform:uppercase;color:var(--text-mute);margin-bottom:0.4rem;">Deadline</label><input type="text" class="form-input" id="tDl" placeholder="Contoh: 20 OKT 2026"></div><button class="btn btn--primary form-submit" onclick="tugasData.push({id:Date.now(),mapel:tMapel.value,desc:tDesc.value,deadline:tDl.value});saveState();renderTugas();closeModal();"><span>Simpan</span></button></div>`); });
+function handleUploadMateri() { const fileInput = document.getElementById('mFile'); const mapelInput = document.getElementById('mMapel'); const file = fileInput.files[0]; const mapel = mapelInput.value.toUpperCase(); if (!file || !mapel) { alert("Mohon pilih file dan isi keterangan mapel."); return; } const reader = new FileReader(); reader.onload = function(e) { materiData.push({ mapel: mapel, title: file.name, size: (file.size / 1024).toFixed(1) + ' KB', guru: 'ADMIN', link: e.target.result }); saveState(); renderMateri(); closeModal(); }; reader.readAsDataURL(file); }
+document.getElementById('btnAddMateri').addEventListener('click', () => { openModal(`<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--line);"><div style="font-family:'JetBrains Mono';text-transform:uppercase;color:var(--accent);">// UPLOAD MATERI</div><button onclick="closeModal()" style="background:transparent;border:none;color:var(--text-mute);cursor:pointer;font-size:1.3rem;">×</button></div><div><div style="margin-bottom:1rem;"><label style="display:block;font-family:'JetBrains Mono';font-size:0.7rem;text-transform:uppercase;color:var(--text-mute);margin-bottom:0.4rem;">Pilih File</label><input type="file" class="form-input" id="mFile"></div><div style="margin-bottom:1rem;"><label style="display:block;font-family:'JetBrains Mono';font-size:0.7rem;text-transform:uppercase;color:var(--text-mute);margin-bottom:0.4rem;">Keterangan Mapel</label><input type="text" class="form-input" id="mMapel" placeholder="Contoh: FISIKA"></div><button class="btn btn--primary form-submit" onclick="handleUploadMateri()"><span>Upload</span></button></div>`); });
+document.getElementById('btnAddPengumuman').addEventListener('click', () => { openModal(`<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--line);"><div style="font-family:'JetBrains Mono';text-transform:uppercase;color:var(--accent);">// TAMBAH PENGUMUMAN</div><button onclick="closeModal()" style="background:transparent;border:none;color:var(--text-mute);cursor:pointer;font-size:1.3rem;">×</button></div><div><div style="margin-bottom:1rem;"><label style="display:block;font-family:'JetBrains Mono';font-size:0.7rem;text-transform:uppercase;color:var(--text-mute);margin-bottom:0.4rem;">Isi Pengumuman</label><textarea class="form-input" id="pText" rows="4"></textarea></div><button class="btn btn--primary form-submit" onclick="const d=new Date();const m=['JAN','FEB','MAR','APR','MEI','JUN','JUL','AGT','SEP','OKT','NOV','DES'];noticeData.unshift({date:String(d.getDate()).padStart(2,'0')+' '+m[d.getMonth()]+' '+d.getFullYear(),text:pText.value});saveState();renderNotice();closeModal();"><span>Simpan</span></button></div>`); });
+document.getElementById('btnAddPrestasi').addEventListener('click', () => { openModal(`<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--line);"><div style="font-family:'JetBrains Mono';text-transform:uppercase;color:var(--accent);">// TAMBAH PRESTASI</div><button onclick="closeModal()" style="background:transparent;border:none;color:var(--text-mute);cursor:pointer;font-size:1.3rem;">×</button></div><div><div style="margin-bottom:1rem;"><label style="display:block;font-family:'JetBrains Mono';font-size:0.7rem;text-transform:uppercase;color:var(--text-mute);margin-bottom:0.4rem;">Kategori</label><select class="form-input" id="pCat"><option value="akademik">Akademik</option><option value="nonakademik">Non-Akademik</option></select></div><div style="margin-bottom:1rem;"><label style="display:block;font-family:'JetBrains Mono';font-size:0.7rem;text-transform:uppercase;color:var(--text-mute);margin-bottom:0.4rem;">Tahun</label><input type="text" class="form-input" id="pYear" placeholder="2026"></div><div style="margin-bottom:1rem;"><label style="display:block;font-family:'JetBrains Mono';font-size:0.7rem;text-transform:uppercase;color:var(--text-mute);margin-bottom:0.4rem;">Judul Prestasi</label><input type="text" class="form-input" id="pTitle"></div><div style="margin-bottom:1rem;"><label style="display:block;font-family:'JetBrains Mono';font-size:0.7rem;text-transform:uppercase;color:var(--text-mute);margin-bottom:0.4rem;">Deskripsi</label><input type="text" class="form-input" id="pDesc"></div><div style="margin-bottom:1rem;"><label style="display:block;font-family:'JetBrains Mono';font-size:0.7rem;text-transform:uppercase;color:var(--text-mute);margin-bottom:0.4rem;">Medali</label><input type="text" class="form-input" id="pMedal" placeholder="EMAS / PERAK / BRONZE"></div><button class="btn btn--primary form-submit" onclick="const d={year:pYear.value,title:pTitle.value,desc:pDesc.value,medal:pMedal.value};if(pCat.value==='akademik')achAkademik.push(d);else achNonAkademik.push(d);saveState();renderAch();closeModal();"><span>Simpan</span></button></div>`); });
+document.getElementById('btnAddFoto').addEventListener('click', () => { openModal(`<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--line);"><div style="font-family:'JetBrains Mono';text-transform:uppercase;color:var(--accent);">// TAMBAH FOTO</div><button onclick="closeModal()" style="background:transparent;border:none;color:var(--text-mute);cursor:pointer;font-size:1.3rem;">×</button></div><div><div style="margin-bottom:1rem;"><label style="display:block;font-family:'JetBrains Mono';font-size:0.7rem;text-transform:uppercase;color:var(--text-mute);margin-bottom:0.4rem;">Pilih File Foto</label><input type="file" accept="image/*" class="form-input" id="gFile"></div><div style="margin-bottom:1rem;"><label style="display:block;font-family:'JetBrains Mono';font-size:0.7rem;text-transform:uppercase;color:var(--text-mute);margin-bottom:0.4rem;">Keterangan</label><input type="text" class="form-input" id="gDesc" placeholder="Contoh: Foto Classmeeting"></div><button class="btn btn--primary form-submit" onclick="const f=gFile.files[0];if(f){const r=new FileReader();r.onload=(e)=>{galeriData.unshift({src:e.target.result,desc:gDesc.value});saveState();renderGaleri();closeModal();};r.readAsDataURL(f);}"><span>Unggah Foto</span></button></div>`); });
+
+document.getElementById('themeToggle').addEventListener('click', () => { const html = document.documentElement; const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; html.setAttribute('data-theme', next); localStorage.setItem('saintek_theme', next); });
+
+function updateClock() { const d = new Date(); const days = ['MINGGU','SENIN','SELASA','RABU','KAMIS','JUMAT','SABTU']; const months = ['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER']; const time = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')} WIB`; const date = `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`; document.getElementById('liveClock').textContent = time; document.getElementById('liveDate').textContent = date; }
+setInterval(updateClock, 1000); updateClock();
+
+const typeText = `// Kelas dengan 36 siswa, 19 pengajar, 1 visi bersama.
+// Dimana sains, teknologi, dan iman dipelajari bersama —
+// disiplin tanpa kekerasan, prestasi tanpa arogansi.`;
+function startTypewriter() { const host = document.getElementById('typewriter'); const ctaWrap = document.getElementById('heroCta'); let i = 0; const tick = setInterval(() => { i++; host.innerHTML = typeText.slice(0, i) + '<span class="caret" id="caret"></span>'; if (i >= typeText.length) { clearInterval(tick); let n = 0, on = true; const blink = setInterval(() => { on = !on; const c = document.getElementById('caret'); if (c) c.classList.toggle('is-hidden', !on); if (++n >= 6) { clearInterval(blink); if (c) c.classList.add('is-hidden'); ctaWrap.classList.add('is-shown'); } }, 400); } }, 35); }
+
+const io = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } }); }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+window.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('saintek_theme');
+  if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+  const session = JSON.parse(sessionStorage.getItem('saintek_session'));
+  if (!session) { showLogin(); } else { applyRole(session.role); }
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  setTimeout(startTypewriter, 400);
+});
+</script>
+</body>
+</html>
