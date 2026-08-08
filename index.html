@@ -126,7 +126,19 @@ main { padding-top: 5rem; position: relative; z-index: 1; min-height: calc(100vh
 
 .structure-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); margin-bottom: 4rem; } .role-card, .sekbid-card, .teacher-card, .agenda-card, .picket-card { background: var(--bg); position: relative; transition: background 400ms var(--ease); } .role-card { padding: 2.5rem 2rem; } .role-card:hover, .sekbid-card:hover, .teacher-card:hover, .agenda-card:hover, .picket-card:hover { background: var(--surface-hover); } .role-card::before, .sekbid-card::before, .teacher-card::before, .agenda-card::before, .picket-card::before { content: ''; position: absolute; left: 0; top: 0; width: 2px; height: 0; background: var(--accent); transition: height 600ms var(--ease); } .role-card:hover::before, .sekbid-card:hover::before, .teacher-card:hover::before, .agenda-card:hover::before, .picket-card:hover::before { height: 100%; } .role-name { font-size: 1.4rem; font-weight: 700; color: var(--text); margin-bottom: 0.4rem; transition: color 400ms var(--ease); } .role-card:hover .role-name { color: var(--accent); } @media (max-width: 768px) { .structure-grid { grid-template-columns: 1fr; } }
 
-.absensi-wrap, .kas-list, .kas-catatan, .kas-progress-wrap { border: 1px solid var(--line); background: var(--bg); } .absensi-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-width: 640px; } .absensi-table th, .absensi-table td { padding: 0.9rem 1.5rem; border-bottom: 1px solid var(--line-soft); text-align: left; } .absensi-table th { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; text-transform: uppercase; color: var(--text-mute); } .absensi-table tr:last-child td { border-bottom: none; } .absensi-table tbody tr { transition: background 300ms var(--ease); position: relative; } .absensi-table tbody tr::before { content: ''; position: absolute; left: 0; top: 0; width: 2px; height: 0; background: var(--accent); transition: height 500ms var(--ease); } .absensi-table tbody tr:hover::before { height: 100%; } .absensi-table tbody tr:hover { background: var(--surface); } .status-btn { border: 1px solid var(--line); background: transparent; color: var(--text-mute); padding: 0.4rem 0.8rem; cursor: pointer; font-family: 'JetBrains Mono'; font-size: 0.72rem; transition: all 200ms; } .status-btn:hover { border-color: var(--text); color: var(--text); } .status-btn.active[data-st="H"] { background: var(--accent); color: var(--bg); border-color: var(--accent); } .status-btn.active[data-st="S"] { background: var(--info); color: #0a0a0a; border-color: var(--info); } .status-btn.active[data-st="I"] { background: var(--purple); color: #0a0a0a; border-color: var(--purple); } .status-btn.active[data-st="A"] { background: var(--warn); color: #0a0a0a; border-color: var(--warn); }
+.absensi-wrap, .kas-list, .kas-catatan, .kas-progress-wrap { border: 1px solid var(--line); background: var(--bg); } .absensi-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-width: 640px; } .absensi-table th, .absensi-table td { padding: 0.9rem 1.5rem; border-bottom: 1px solid var(--line-soft); text-align: left; } .absensi-table th { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; text-transform: uppercase; color: var(--text-mute); } .absensi-table tr:last-child td { border-bottom: none; } .absensi-table tbody tr { transition: background 300ms var(--ease); position: relative; } .absensi-table tbody tr::before { content: ''; position: absolute; left: 0; top: 0; width: 2px; height: 0; background: var(--accent); transition: height 500ms var(--ease); } .absensi-table tbody tr:hover::before { height: 100%; } .absensi-table tbody tr:hover { background: var(--surface); }
+/* CSS Tambahan untuk tombol Absensi non-admin */
+.status-text { font-family: 'JetBrains Mono', font-size: 0.8rem; font-weight: 700; padding: 0.4rem 0.8rem; border: 1px solid var(--line); }
+.status-text.H { color: var(--accent); border-color: var(--accent-soft); }
+.status-text.S { color: var(--info); border-color: var(--info); }
+.status-text.I { color: var(--purple); border-color: var(--purple); }
+.status-text.A { color: var(--warn); border-color: var(--warn); }
+.status-btn { border: 1px solid var(--line); background: transparent; color: var(--text-mute); padding: 0.4rem 0.8rem; cursor: pointer; font-family: 'JetBrains Mono'; font-size: 0.72rem; transition: all 200ms; }
+.status-btn:hover { border-color: var(--text); color: var(--text); }
+.status-btn.active[data-st="H"] { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+.status-btn.active[data-st="S"] { background: var(--info); color: #0a0a0a; border-color: var(--info); }
+.status-btn.active[data-st="I"] { background: var(--purple); color: #0a0a0a; border-color: var(--purple); }
+.status-btn.active[data-st="A"] { background: var(--warn); color: #0a0a0a; border-color: var(--warn); }
 
 .kas-overview { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); margin-bottom: 2rem; } .kas-stat { background: var(--bg); padding: 2rem 1.5rem; } .kas-stat-num { font-family: 'JetBrains Mono', monospace; font-size: clamp(1.3rem, 2.6vw, 1.9rem); font-weight: 700; color: var(--text); } .kas-stat-num.in { color: var(--accent); } .kas-stat-num.out { color: var(--warn); }
 
@@ -648,14 +660,47 @@ const teachers = [
 
 const mapelList = ['SKI', 'SENI', 'FIKIH', 'MMTL', 'KIMIA', 'MM', 'PJOK', 'SEJARAH', 'PKN', 'B. ARAB', 'B. INGGRIS', 'QUR’AN HADIST', 'MLTQ', 'AKIDAH AKHLAK', 'MLPP', 'INFORMATIKA', 'B. INDONESIA', 'BIOLOGI', 'FISIKA'];
 
+// FIX 1: Hanya admin yang bisa mengubah absensi
 function renderAbsensi() {
+  const isAdmin = document.body.classList.contains('is-admin');
   document.getElementById('absensiBody').innerHTML = students.map((s, i) => {
     const currentStatus = absensiState[i] || 'H';
-    return `<tr><td style="color:var(--text-mute);font-family:'JetBrains Mono';">${String(i+1).padStart(2,'0')}</td><td style="color:var(--text);font-weight:500;">${s[0]}</td><td style="color:var(--text-mute);">${s[1]}</td><td><div style="display:flex;gap:0.3rem;" data-st-group data-index="${i}"><button class="status-btn ${currentStatus==='H'?'active':''}" data-st="H">H</button><button class="status-btn ${currentStatus==='S'?'active':''}" data-st="S">S</button><button class="status-btn ${currentStatus==='I'?'active':''}" data-st="I">I</button><button class="status-btn ${currentStatus==='A'?'active':''}" data-st="A">A</button></div></td></tr>`;
+    let statusHtml = '';
+    if (isAdmin) {
+      statusHtml = `<div style="display:flex;gap:0.3rem;" data-st-group data-index="${i}">
+        <button class="status-btn ${currentStatus==='H'?'active':''}" data-st="H">H</button>
+        <button class="status-btn ${currentStatus==='S'?'active':''}" data-st="S">S</button>
+        <button class="status-btn ${currentStatus==='I'?'active':''}" data-st="I">I</button>
+        <button class="status-btn ${currentStatus==='A'?'active':''}" data-st="A">A</button>
+      </div>`;
+    } else {
+      statusHtml = `<div class="status-text ${currentStatus}">${currentStatus}</div>`;
+    }
+    return `<tr>
+      <td style="color:var(--text-mute);font-family:'JetBrains Mono';">${String(i+1).padStart(2,'0')}</td>
+      <td style="color:var(--text);font-weight:500;">${s[0]}</td>
+      <td style="color:var(--text-mute);">${s[1]}</td>
+      <td>${statusHtml}</td>
+    </tr>`;
   }).join('');
-  document.querySelectorAll('#absensiBody [data-st-group]').forEach(group => { group.querySelectorAll('.status-btn').forEach(btn => { btn.addEventListener('click', () => { const idx = group.dataset.index; absensiState[idx] = btn.dataset.st; saveState(); group.querySelectorAll('.status-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); updateRekap(); }); }); });
+  
+  if (isAdmin) {
+    document.querySelectorAll('#absensiBody [data-st-group]').forEach(group => {
+      group.querySelectorAll('.status-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = group.dataset.index;
+          absensiState[idx] = btn.dataset.st;
+          saveState();
+          group.querySelectorAll('.status-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          updateRekap();
+        });
+      });
+    });
+  }
   updateRekap();
 }
+
 function updateRekap() {
   let h=0, s=0, i=0, a=0; Object.values(absensiState).forEach(st => { if(st === 'H') h++; if(st === 'S') s++; if(st === 'I') i++; if(st === 'A') a++; });
   const totalS = students.length; h = totalS - (s + i + a);
@@ -672,8 +717,21 @@ function renderSchedule() {
 function renderPicket() { document.getElementById('picketGrid').innerHTML = picket.map(p => `<div class="picket-card"><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--line-soft);"><div style="font-family:'JetBrains Mono';font-size:0.92rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:700;">${p.day}</div></div><div style="margin-bottom:1rem;font-size:0.85rem;color:var(--text-soft);">Koordinator: <strong style="color:var(--accent);">${p.coord}</strong> <small style="color:var(--text-mute);">(${p.role})</small></div><div style="display:flex;flex-wrap:wrap;gap:0.4rem;">${p.members.map(m => `<span style="font-size:0.8rem;padding:0.35rem 0.7rem;border:1px solid var(--line);color:var(--text-soft);">${m}</span>`).join('')}</div></div>`).join(''); }
 function renderTeachers() { document.getElementById('teacherGrid').innerHTML = teachers.map(t => `<div class="role-card" style="padding: 2rem 1.8rem;"><div style="display:inline-block;font-family:'JetBrains Mono';font-size:0.72rem;letter-spacing:0.15em;color:var(--accent);border:1px solid var(--accent-soft);padding:0.25rem 0.6rem;margin-bottom:1.2rem;">[ ${t[0]} ]</div><div style="font-size:1.05rem;font-weight:600;color:var(--text);margin-bottom:0.4rem;">${t[1]}</div><div style="font-family:'JetBrains Mono';font-size:0.72rem;color:var(--text-mute);text-transform:uppercase;">${t[2]}</div></div>`).join(''); }
 function renderMapel() { document.getElementById('mapelGrid').innerHTML = mapelList.map(m => `<div class="mapel-card"><div class="mapel-name">${m}</div><div class="mapel-teacher">// KLIK UNTUK DETAIL</div></div>`).join(''); }
+
+// FIX 2: Hanya admin yang bisa menghapus tugas (menampilkan tombol check)
 function renderTugas() {
-  document.getElementById('tugasList').innerHTML = tugasData.map(t => `<div class="tugas-item" data-id="${t.id}"><div class="tugas-check" onclick="completeTugas(${t.id})"></div><div class="tugas-mapel">${t.mapel}</div><div class="tugas-desc">${t.desc}</div><div class="tugas-deadline">${t.deadline}</div></div>`).join('');
+  const isAdmin = document.body.classList.contains('is-admin');
+  const checkHtml = isAdmin ? `<div class="tugas-check" onclick="completeTugas(${t.id})"></div>` : '<div style="width:20px;"></div>'; // Placeholder agar grid rapi
+  
+  document.getElementById('tugasList').innerHTML = tugasData.map(t => `
+    <div class="tugas-item" data-id="${t.id}">
+      ${checkHtml}
+      <div class="tugas-mapel">${t.mapel}</div>
+      <div class="tugas-desc">${t.desc}</div>
+      <div class="tugas-deadline">${t.deadline}</div>
+    </div>
+  `).join('');
+  
   document.getElementById('widgetTugasList').innerHTML = tugasData.slice(0, 3).map(t => `<li><span><strong style="color:var(--accent);margin-right:0.5rem;">${t.mapel}</strong> ${t.desc}</span><span class="deadline">${t.deadline}</span></li>`).join('');
 }
 function completeTugas(id) { const el = document.querySelector(`.tugas-item[data-id="${id}"]`); if (el) { el.classList.add('vanish'); setTimeout(() => { tugasData = tugasData.filter(t => t.id !== id); saveState(); renderTugas(); }, 400); } }
